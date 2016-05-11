@@ -11,5 +11,9 @@ public class Jeu {
 		this.setPlateau(p);
 	}
 	
+	public Joueur[] getJoueur() {
+		return this.joueur;
+	}
+	
 	
 }
