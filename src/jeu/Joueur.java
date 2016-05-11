@@ -15,7 +15,7 @@ public class Joueur {
 		return nomJoueur;
 	}
 
-	public void setNomJoueur(String nomJoueur) {
+	private void setNomJoueur(String nomJoueur) {
 		if (nomJoueur == null) throw new NullPointerException();
 		if (nomJoueur.equals("")) throw new IllegalArgumentException();
 		this.nomJoueur = nomJoueur;
@@ -25,7 +25,7 @@ public class Joueur {
 		return numeroJoueur;
 	}
 
-	public void setNumeroJoueur(int numeroJoueur) {
+	private void setNumeroJoueur(int numeroJoueur) {
 		this.numeroJoueur = numeroJoueur;
 	}
 
@@ -33,7 +33,7 @@ public class Joueur {
 		return pieces;
 	}
 
-	public void setPieces(Piece[] pieces) {
+	private void setPieces(Piece[] pieces) {
 		this.pieces = pieces;
 	}
 
