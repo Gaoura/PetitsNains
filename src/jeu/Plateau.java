@@ -9,15 +9,6 @@ public class Plateau
 		this.setCases(c);
 	}
 	
-	public Plateau(Coordonnees c)
-	{
-		if (c == null)
-			throw new NullPointerException();
-		
-		Case[][] plateau = new Case[c.getAbscisse()][c.getOrdonnee()];
-		this.setCases(plateau);
-	}
-
 	public Case[][] getCases()
 	{
 		return this.cases;
