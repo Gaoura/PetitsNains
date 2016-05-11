@@ -27,13 +27,12 @@ public class Jeu {
 		return joueurCourant;
 	}
 
-	public void setJoueurCourant(int joueurCourant) {
-		this.joueurCourant = joueurCourant;
+	public void setJoueurCourant() {
+		//Passe au joueur courant
+		this.joueurCourant = ((this.joueurCourant++) % 4);
 	}
 
 	public void setJoueur(Joueur[] joueur) {
 		this.joueur = joueur;
 	}
-	
-	
 }

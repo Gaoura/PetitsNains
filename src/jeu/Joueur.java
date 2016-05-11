@@ -33,7 +33,7 @@ public class Joueur {
 		return pieces;
 	}
 
-	private void setPieces(Piece[] pieces) {
+	private	 void setPieces(Piece[] pieces) {
 		this.pieces = pieces;
 	}
 
