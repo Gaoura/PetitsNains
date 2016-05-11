@@ -7,8 +7,8 @@ public class Coordonnees
 	
 	public Coordonnees(int x, int y)
 	{
-		this.abscisse = x;
-		this.ordonnee = y;
+		this.setAbscisse(x);
+		this.setOrdonnee(y);
 	}
 
 	public int getAbscisse()
@@ -23,11 +23,17 @@ public class Coordonnees
 
 	public void setAbscisse(int abscisse)
 	{
+		if (abscisse < 0)
+			throw new IllegalArgumentException();
+		
 		this.abscisse = abscisse;
 	}
 
 	public void setOrdonnee(int ordonnee)
 	{
+		if (ordonnee < 0)
+			throw new IllegalArgumentException();
+		
 		this.ordonnee = ordonnee;
 	}
 }
