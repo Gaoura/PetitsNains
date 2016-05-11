@@ -23,7 +23,7 @@ public class Piece {
 		return nom;
 	}
 
-	public void setNom(String nom) {
+	private void setNom(String nom) {
 		this.nom = nom;
 	}
 
@@ -33,6 +33,10 @@ public class Piece {
 
 	public void setPos(Case pos) {
 		this.pos = pos;
+	}
+	
+	public void seDeplacer(int score) {
+		
 	}
 	
 	
