@@ -1,9 +1,13 @@
 package jeu;
 
+import java.util.Hashtable;
+import java.io.File;
+
 public class Piece {
 	private Joueur proprietaire;
 	private String nom;
 	private Case pos;
+	private int direction;
 	
 	public Piece (Joueur j, String nom, Case pos) {
 		this.setProprietaire(j);
@@ -36,8 +40,12 @@ public class Piece {
 	}
 	
 	public void seDeplacer(int score) {
+		//Lis le fichier mouvement.txt pour obtenir les pivots
+		//Puis si la coordonnées courante à chaque déplacement correspond à une entrée
+		//on est sur un pivot et on doit changer de direction
+		Hashtable ht = new Hashtable();
+		
+		File fp = new File("mouvement.txt");
 		
 	}
-	
-	
 }
