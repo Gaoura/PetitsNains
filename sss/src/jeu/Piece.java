@@ -47,7 +47,7 @@ public class Piece {
 		//Puis si la coordonnées courante à chaque déplacement correspond à une entrée
 		//on est sur un pivot et on doit changer de direction
 		String pos;
-		String dir;
+		String dir = "d";
 		
 		Hashtable<Integer, String> ht = new Hashtable<Integer, String>();
 		
@@ -66,5 +66,19 @@ public class Piece {
 			    e.printStackTrace();
 		}
 		
+		String key = "" + this.getPos().getPosition().getOrdonnee() + "," + this.getPos().getPosition().getAbscisse();
+		int hashedKey = key.hashCode();
+		if (ht.containsKey(hashedKey)) {
+			String newDir = ht.get(hashedKey);
+			if (dir.equals("d")) {
+				//abscisse ++
+			} else if (dir.equals("g")) {
+				//abscisse --
+			} else if (dir.equals("h")) {
+				//ordonnée ++
+			} else if (dir.equals("b")) {
+				//ordonnée ++
+			}
+		}
 	}
 }
