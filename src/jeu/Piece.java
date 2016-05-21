@@ -2,6 +2,7 @@ package jeu;
 
 import java.util.Hashtable;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class Piece {
 	private Joueur proprietaire;
@@ -43,9 +44,27 @@ public class Piece {
 		//Lis le fichier mouvement.txt pour obtenir les pivots
 		//Puis si la coordonnées courante à chaque déplacement correspond à une entrée
 		//on est sur un pivot et on doit changer de direction
+		String pos;
+		String dir;
+		
 		Hashtable ht = new Hashtable();
 		
-		File fp = new File("mouvement.txt");
+		try {
+			Scanner sc = new Scanner (new FileReader("mouvement.txt"));
+			do {
+				try {
+					s.findInLine("(\\w+):(\\w+)");
+					MatchResult result = s.match();
+					pos = result.group(1);
+					dir = result.group(2);
+				} (EOFException e) {
+					break;
+				}
+			} while (true);
+		} catch (FileNotFoundException e) {
+			    System.out.println ("Le fichier n'a pas été trouvé");
+			    e.printStackTrace();
+		}
 		
 	}
 }
