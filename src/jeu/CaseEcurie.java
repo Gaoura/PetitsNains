@@ -39,13 +39,13 @@ public class CaseEcurie extends Case
 	}
 	
 	// Fait entrer un cheval en jeu
-	public void sortirCheval() throws EcurieException
+	public void rentrerCheval() throws EcurieException
 	{
 		this.setDepart(this.depart - 1);
 	}
 	
 	// Fait revenir un cheval dégagé par un adversaire à l'écurie de départ
-	public void rentrerCheval() throws EcurieException
+	public void sortirCheval() throws EcurieException
 	{
 		this.setDepart(this.depart + 1);
 	}

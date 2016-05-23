@@ -1,6 +1,6 @@
 package jeu;
 
-public class CaseOccupable extends Case
+public abstract class CaseOccupable extends Case
 {
 	private Piece occupant;
 	
