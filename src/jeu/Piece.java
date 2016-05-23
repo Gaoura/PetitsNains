@@ -4,11 +4,23 @@ public class Piece {
 	private Joueur proprietaire;
 	private String nom;
 	private Case pos;
+	private String dir;
 	
-	public Piece (Joueur j, String nom, Case pos) {
+	public Piece (Joueur j, String nom, Case pos, String dir) {
 		this.setProprietaire(j);
 		this.setNom(nom);
 		this.setPos(pos);
+		this.setDir(dir);
+	}
+	
+	public String getDir() {
+		return this.dir;
+	}
+	
+	public void setDir(String dir) {
+		if (!dir.equals("d") || !dir.equals("g") || !dir.equals("h") || !dir.equals("b"))
+			throw new IllegalArgumentException("Direction incorrecte");
+		else this.dir = dir;
 	}
 
 	public Joueur getProprietaire() {
