@@ -36,4 +36,8 @@ public class Coordonnees
 		
 		this.ordonnee = ordonnee;
 	}
+	
+	public String toString() {
+		return "" + this.getAbscisse() + "," + this.getOrdonnee();
+	}
 }

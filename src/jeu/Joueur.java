@@ -1,14 +1,25 @@
 package jeu;
 
+import java.util.ArrayList;
+
 public class Joueur {
 	private String nomJoueur;
 	private int numeroJoueur;
-	private Piece[] pieces;
+	private ArrayList<Piece> pieces;
+	private CaseEcurie ecurie;
 	
-	public Joueur(String nom, int num, Piece[] p) {
+	public Joueur(String nom, int num, CaseEcurie e) {
 		this.setNomJoueur(nom);
 		this.setNumeroJoueur(num);
-		this.setPieces(p);
+		this.setEcurie(e);
+	}
+	
+	public CaseEcurie getEcurie() {
+		return this.ecurie;
+	}
+	
+	private void setEcurie(CaseEcurie e) {
+		this.ecurie = e;
 	}
 
 	public String getNomJoueur() {
@@ -29,20 +40,20 @@ public class Joueur {
 		this.numeroJoueur = numeroJoueur;
 	}
 
-	public Piece[] getPieces() {
-		return pieces;
-	}
-
-	private	 void setPieces(Piece[] pieces) {
-		this.pieces = pieces;
+	public ArrayList<Piece> getPieces() {
+		return this.pieces;
 	}
 	
-	public void rentrerCheval() {
-		
+	public void add (Piece p) {
+		this.getPieces().add(p);
 	}
 	
-	public void sortirCheval() {
-		
+	public Piece get(int index) {
+		return this.getPieces().get(index);
 	}
-
+	
+	public int size() {
+		return this.getPieces().size();
+	}
+	
 }
