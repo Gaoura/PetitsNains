@@ -2,7 +2,6 @@ package jeu;
 
 public class CaseMarche extends CaseOccupable
 {
-	
 	private int valeur;
 	
 	public CaseMarche(Coordonnees c, int v)
