@@ -91,19 +91,18 @@ public class Jeu implements Tour{
 	@Override
 	public void deplacerPiece(Piece p, int score) {
 		// TODO Auto-generated method stub
-		String key = "" + p.getPos().getPosition().getOrdonnee() + "," + p.getPos().getPosition().getAbscisse();
-		int hashedKey = key.hashCode();
-		if (ht.containsKey(hashedKey)) {
-			String newDir = ht.get(hashedKey);
-			if (p.getDir().equals("d")) {
-				//abscisse ++
-			} else if (p.getDir().equals("g")) {
-				//abscisse --
-			} else if (p.getDir().equals("h")) {
-				//ordonnée ++
-			} else if (p.getDir().equals("b")) {
-				//ordonnée ++
-			}
+		int hashedKey = p.getPos().getPosition().toString().hashCode();
+		if (ht.containsKey(hashedKey))
+			p.setDir(ht.get(hashedKey));
+		
+		if (p.getDir().equals("d")) {
+			//abscisse ++
+		} else if (p.getDir().equals("g")) {
+			//abscisse --
+		} else if (p.getDir().equals("h")) {
+			//ordonnée ++
+		} else if (p.getDir().equals("b")) {
+			//ordonnée ++
 		}
 		
 	}
