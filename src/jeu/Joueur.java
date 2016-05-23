@@ -36,5 +36,13 @@ public class Joueur {
 	private	 void setPieces(Piece[] pieces) {
 		this.pieces = pieces;
 	}
+	
+	public void rentrerCheval() {
+		
+	}
+	
+	public void sortirCheval() {
+		
+	}
 
 }
