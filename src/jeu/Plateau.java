@@ -21,4 +21,10 @@ public class Plateau
 		
 		this.cases = cases;
 	}
+
+	public Case getCaseDepuisCoordonnees(Coordonnees c)
+	{
+		return cases[c.getAbscisse()][c.getOrdonnee()];
+		
+	}
 }
