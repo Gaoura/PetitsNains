@@ -6,20 +6,20 @@ public class Joueur {
 	private String nomJoueur;
 	private int numeroJoueur;
 	private ArrayList<Piece> pieces;
-	private Reserve ecurie;
+	private Reserve stock;
 	
 	public Joueur(String nom, int num, Reserve e) {
 		this.setNomJoueur(nom);
 		this.setNumeroJoueur(num);
-		this.setEcurie(e);
+		this.setStock(e);
 	}
 	
-	public Reserve getEcurie() {
-		return this.ecurie;
+	public Reserve getStock() {
+		return this.stock;
 	}
 	
-	private void setEcurie(Reserve e) {
-		this.ecurie = e;
+	private void setStock(Reserve e) {
+		this.stock = e;
 	}
 
 	public String getNomJoueur() {
