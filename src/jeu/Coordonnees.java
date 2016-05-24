@@ -11,6 +11,11 @@ public class Coordonnees
 		this.setOrdonnee(y);
 	}
 
+	public Coordonnees (Coordonnees c) {
+		this.setAbscisse(c.getAbscisse());
+		this.setOrdonnee(c.getOrdonnee());
+	}
+	
 	public int getAbscisse()
 	{
 		return this.abscisse;
