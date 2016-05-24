@@ -150,8 +150,8 @@ public class Jeu implements Tour{
 		}
 		
 		if (p == null) throw new ChevalException("Cheval introuvable");
-		this.getJoueurCourant().getEcurie().sortirCheval();
-		String nomCheval = "cheval" + (4-this.getJoueurCourant().getEcurie().getDepart());
+		this.getJoueurCourant().getStock().sortirPiece();
+		String nomCheval = "cheval" + (4-((Ecurie) this.getJoueurCourant().getStock()).getDepart());
 		String newDir = ht.get(p.getPos().getPosition().toString().hashCode());
 		this.getJoueurCourant().add(new Piece(this.getJoueurCourant(), nomCheval, piece.getPos(), newDir));
 	}
@@ -160,7 +160,7 @@ public class Jeu implements Tour{
 	public void sortirCheval(Piece p) throws EcurieException {
 		//sortir un cheval du plateau
 		p.getProprietaire().getPieces().remove(p);
-		p.getProprietaire().getEcurie().sortirCheval();
+		p.getProprietaire().getStock().sortirPiece();
 		((CaseNormale) p.getPos()).setOccupant(null);
 	}
 }
