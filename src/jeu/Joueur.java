@@ -6,19 +6,19 @@ public class Joueur {
 	private String nomJoueur;
 	private int numeroJoueur;
 	private ArrayList<Piece> pieces;
-	private CaseEcurie ecurie;
+	private Reserve ecurie;
 	
-	public Joueur(String nom, int num, CaseEcurie e) {
+	public Joueur(String nom, int num, Reserve e) {
 		this.setNomJoueur(nom);
 		this.setNumeroJoueur(num);
 		this.setEcurie(e);
 	}
 	
-	public CaseEcurie getEcurie() {
+	public Reserve getEcurie() {
 		return this.ecurie;
 	}
 	
-	private void setEcurie(CaseEcurie e) {
+	private void setEcurie(Reserve e) {
 		this.ecurie = e;
 	}
 
