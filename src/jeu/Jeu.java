@@ -12,6 +12,7 @@ public class Jeu implements Tour{
 	private Plateau plateau; //plateau du jeu
 	private int joueurCourant = 0; //le joueur en cour
 	private Hashtable<Integer, String> ht; //la liste des pivots
+	private Hashtable<Integer, String> htInv; //la liste des pivots pour les mouvements de retour
 	
 	public Jeu(Joueur[] j, Plateau p) {
 		this.setJoueur(j);
@@ -29,6 +30,21 @@ public class Jeu implements Tour{
 		String pos, dir;
 		try {
 			Scanner sc = new Scanner (new FileReader("mouvement.txt"));
+			do {
+				sc.findInLine("(\\w+):(\\w+)");
+				MatchResult result = sc.match();
+				pos = result.group(1);
+				dir = result.group(2);
+				ht.put(pos.hashCode(), dir);
+			} while (sc.nextLine() != null);
+			sc.close();
+		} catch (FileNotFoundException e) {
+			    System.out.println ("Le fichier n'a pas été trouvé");
+			    e.printStackTrace();
+		}
+		
+		try {
+			Scanner sc = new Scanner (new FileReader("mouvementInv.txt"));
 			do {
 				sc.findInLine("(\\w+):(\\w+)");
 				MatchResult result = sc.match();
@@ -91,76 +107,70 @@ public class Jeu implements Tour{
 	@Override
 	public void deplacerPiece(Piece p, int score) {
 		// TODO Auto-generated method stub
-		int hashedKey = p.getPos().getPosition().toString().hashCode();
-		if (ht.containsKey(hashedKey))
-			p.setDir(ht.get(hashedKey));
-		
-		if (p.getDir().equals("d")) {
-			//abscisse ++
-		} else if (p.getDir().equals("g")) {
-			//abscisse --
-		} else if (p.getDir().equals("h")) {
-			//ordonnée ++
-		} else if (p.getDir().equals("b")) {
-			//ordonnée ++
-		}
-		
-	}
-	
-	public void rentrerCheval(Piece p) throws ChevalException, EcurieException, CaseDepartDejaOccupeeException {
-		//Générer une position de départ en fonction du joueur en fonction du numéro de joueur courant
-		// 0 = 0,6
-		// 1 = 8,0
-		// 2 = 14,8
-		// 3 = 6,14
-		//ensuite regarder dans la hashtable pour savoir sur quel pivot on démarre
-		Coordonnees c = null;
-		switch (this.getNumJoueurCourant()) {
-			case 0:
-				c = new Coordonnees(0,6);
-				break;
-			case 1 :
-				c = new Coordonnees(8,0);
-				break;
-			case 2 :
-				c = new Coordonnees(14,8);
-				break;
-			case 3 :
-				c = new Coordonnees(6,14);
-				break;
-		}
-		Piece occupantDepart = ((CaseNormale) this.getPlateau().getCaseDepuisCoordonnees(c)).getOccupant();
-		if (occupantDepart == null) {
-			this.ajout (p);
-		} else if (occupantDepart.getProprietaire() != this.getJoueurCourant()) {
-			//Le cheval sur la case de départ retourne à l'écurie
-			this.sortirCheval(occupantDepart);
-			ajout(p);
-		} else if (occupantDepart.getProprietaire() == this.getJoueurCourant()) 
-			throw new CaseDepartDejaOccupeeException();
-	}
-	
-	public void ajout (Piece p) throws ChevalException, EcurieException {
-		Piece piece = null;
-		for (Piece iterateurPiece : this.getJoueurCourant().getPieces()) {
-			if (iterateurPiece.getNom().equals(p.getNom())) {
-				piece = iterateurPiece;
-				break;
+		int inv = 1;
+		for (int i=0; i<score; i++) {
+			int abs = 0, ord = 0;
+			int hashedKey = p.getPos().getPosition().toString().hashCode();
+			
+			if (inv == 1) {
+				if (ht.containsKey(hashedKey))
+					p.setDir(ht.get(hashedKey));
+				switch (p.getDir()) {
+					case "d" :
+						abs = 1;
+						break;
+					case "g" :
+						abs = -1;
+						break;
+					case "h" :
+						ord = 1;
+						break;
+					case "b" :
+						ord = -1;
+						break;
+				}
+			} else {
+				if (htInv.containsKey(hashedKey))
+					p.setDir(htInv.get(hashedKey));
+				switch (p.getDir()) { //Donner les modif abs et ord
+					case "d" :
+						abs = ;
+						break;
+					case "g" :
+						abs = ;
+						break;
+					case "h" :
+						ord = ;
+						break;
+					case "b" :
+						ord = ;
+						break;
+				}
 			}
+			
+			
+			
+			Coordonnees caseSuivant = p.getPos().getPosition(); //Les coordonnées courante de la piece 
+			Coordonnees temp = new Coordonnees(caseSuivant);
+			
+			temp.setAbscisse(temp.getAbscisse()+abs);
+			temp.setOrdonnee(temp.getOrdonnee()+ord); //Acceder à la case suivante 
+			if ((((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp)).getOccupant() != null)) {
+					if (score - i != 1) {
+						inv *= -1; //Si la case suivante a un occupant, on doit repartir dans l'autre sens
+						ord *= -1;
+						abs *= -1;
+						temp.setAbscisse(caseSuivant.getAbscisse()+abs);
+						temp.setOrdonnee(caseSuivant.getOrdonnee()+ord); //Acceder à la case suivante 
+					} else {
+						//sortir la piece (score == 1)
+					}
+			} else
+				caseSuivant = temp;
+			
+			((CaseOccupable) p.getPos()).setOccupant(null); //La case courante devient vide
+			p.setPos(this.getPlateau().getCaseDepuisCoordonnees(caseSuivant));//La pièce change de case
+			((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(caseSuivant)).setOccupant(p); //La nouvelle case a son occupant
 		}
-		
-		if (p == null) throw new ChevalException("Cheval introuvable");
-		this.getJoueurCourant().getStock().sortirPiece();
-		String nomCheval = "cheval" + (4-((Ecurie) this.getJoueurCourant().getStock()).getDepart());
-		String newDir = ht.get(p.getPos().getPosition().toString().hashCode());
-		this.getJoueurCourant().add(new Piece(this.getJoueurCourant(), nomCheval, piece.getPos(), newDir));
-	}
-
-	@Override
-	public void sortirCheval(Piece p) throws EcurieException {
-		//sortir un cheval du plateau
-		p.getProprietaire().getPieces().remove(p);
-		p.getProprietaire().getStock().sortirPiece();
-		((CaseNormale) p.getPos()).setOccupant(null);
 	}
 }
