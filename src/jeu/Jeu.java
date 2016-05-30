@@ -141,13 +141,22 @@ public class Jeu implements Tour{
 			temp.setOrdonnee(temp.getOrdonnee()+ord); //Acceder à la case suivante 
 			if ((((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp)).getOccupant() != null)) {
 					if (score - i != 1) {
-						inv *= -1; //Si la case suivante a un occupant, on doit repartir dans l'autre sens
+						//Si le score est différent de 1 et que 
+						//la case suivante a un occupant, on doit repartir dans l'autre sens
+						inv *= -1; 
 						ord *= -1;
 						abs *= -1;
 						temp.setAbscisse(caseSuivant.getAbscisse()+abs);
 						temp.setOrdonnee(caseSuivant.getOrdonnee()+ord); //Acceder à la case suivante 
 					} else {
 						//sortir la piece (score == 1)
+						//et prendre sa place
+						CaseOccupable nvlEmplacement = ((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp));
+						try {
+							((Ecurie) nvlEmplacement.getOccupant().getProprietaire().getStock()).sortirCheval(); //Le chavel est retourné dans son écurie
+						} catch (EcurieException e) {} //l'exception ne peut pas se produire puisqu'on ajoute un cheval
+						this.getJoueurCourant().remove(nvlEmplacement.getOccupant());					
+						caseSuivant = nvlEmplacement.getPosition();
 					}
 			} else
 				caseSuivant = temp;

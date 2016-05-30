@@ -8,7 +8,7 @@ public class Ecurie extends Reserve {
 	
 	public Ecurie() {
 		//Il faudrait mettre le nombre de chevaux en paramètres
-		//pour gérer un jeu à 2 chevaux
+		//pour gérer un jeu à n chevaux
 		this.depart = 4;
 		this.arrivee = 4;
 	}

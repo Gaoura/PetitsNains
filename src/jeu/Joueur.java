@@ -56,4 +56,9 @@ public class Joueur {
 		return this.getPieces().size();
 	}
 	
+	public boolean remove(Piece p) {
+		return this.getPieces().remove(p);
+	}
+	
+	
 }
