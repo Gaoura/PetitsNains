@@ -134,8 +134,6 @@ public class Jeu implements Tour{
 					break;
 			}
 			
-			
-			
 			Coordonnees caseSuivant = p.getPos().getPosition(); //Les coordonnées courante de la piece 
 			Coordonnees temp = new Coordonnees(caseSuivant);
 			
