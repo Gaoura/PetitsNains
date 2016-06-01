@@ -40,14 +40,16 @@ public class FenetrePrincipale extends JFrame
 		
 		ArrayList<String> lignes = new ArrayList<String>();
 		
-		File a = new File("damier.txt");
-	    System.out.println(a.exists());
-		if (a.canRead()) System.out.println("ok");
-		else System.out.println("pas ok");
-		System.exit(-1);
+		/*File f = new File("src/jeu/damier.txt");
+		System.out.println("Chemin absolu du fichier : " + f.getAbsolutePath());
+	    System.out.println("Nom du fichier : " + f.getName());
+	    System.out.println("Est-ce qu'il existe ? " + f.exists());
+	    System.out.println("Est-ce un répertoire ? " + f.isDirectory());
+	    System.out.println("Est-ce un fichier ? " + f.isFile());
+		System.exit(-1);*/
 		
 		try {
-			Scanner sc = new Scanner (new FileReader("damier.txt"));
+			Scanner sc = new Scanner (new FileReader("src/jeu/damier.txt"));
 			
 			while (sc.hasNextLine())
 				lignes.add(sc.nextLine());
