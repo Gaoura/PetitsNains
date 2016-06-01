@@ -8,10 +8,12 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +28,7 @@ import jeu.CaseMarche;
 import jeu.CaseNormale;
 import jeu.Coordonnees;
 
+@SuppressWarnings("serial")
 public class FenetrePrincipale extends JFrame
 {
 	
@@ -37,6 +40,12 @@ public class FenetrePrincipale extends JFrame
 		
 		ArrayList<String> lignes = new ArrayList<String>();
 		
+		File a = new File("damier.txt");
+	    System.out.println(a.exists());
+		if (a.canRead()) System.out.println("ok");
+		else System.out.println("pas ok");
+		System.exit(-1);
+		
 		try {
 			Scanner sc = new Scanner (new FileReader("damier.txt"));
 			
@@ -46,7 +55,7 @@ public class FenetrePrincipale extends JFrame
 			
 			sc.close();
 		} catch (FileNotFoundException e) {
-			    System.out.println ("Le fichier n'a pas Ã©tÃ© trouvÃ©");
+			    System.out.println ("Le fichier n'a pas été trouvé");
 			    e.printStackTrace();
 		}
 		
