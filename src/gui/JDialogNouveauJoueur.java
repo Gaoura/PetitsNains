@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 class JDialogNouveauJoueur extends JFrame {
 	public int nbJoueur;
 	public String[] nomJoueurs;
+	public int premierJoueur;
 
 	private JTextField[] reponses;
 	
@@ -18,7 +19,12 @@ class JDialogNouveauJoueur extends JFrame {
 		nomJoueurs = new String[this.getNbJoueur()];
 		reponses = new JTextField[20];
 		nomsJoueurs();
+		this.premierJoueur = definirOrdre();
 	}
+    
+    private int definirOrdre() {
+		return nbJoueur;
+    }
     
     private void nomsJoueurs() {
     	JDialog d1 = new JDialog(this,"Noms de joueurs",true);
@@ -89,8 +95,16 @@ class JDialogNouveauJoueur extends JFrame {
     public void setNbJoueur(int nb){
     	this.nbJoueur = nb;
     }
-    
-    class EcouteurJoueur implements ActionListener {
+
+    public int getPremierJoueur() {
+		return premierJoueur;
+	}
+
+	public void setPremierJoueur(int premierJoueur) {
+		this.premierJoueur = premierJoueur;
+	}
+	
+	class EcouteurJoueur implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{

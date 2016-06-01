@@ -60,5 +60,10 @@ public class Joueur {
 		return this.getPieces().remove(p);
 	}
 	
+	@Override
+	public String toString() {
+		return "" + this.getNomJoueur() + "/" + this.getNumeroJoueur();
+	}
+	
 	
 }
