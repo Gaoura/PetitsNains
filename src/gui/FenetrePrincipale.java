@@ -3,6 +3,7 @@ package gui;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +28,8 @@ public class FenetrePrincipale extends JFrame
 	
 	private JTextField tfValeur;
 	private int nbJoueur;
-	JPanel main_panel;
+	private JPanel main_panel;
+	private String[] nomsJoueurs;
 	
 	public FenetrePrincipale(String titre)
 	{
@@ -119,6 +121,18 @@ public class FenetrePrincipale extends JFrame
 		return this.nbJoueur;
 	}
 
+	public void initNomsJoueurs (int r) {
+		this.nomsJoueurs = new String[r];
+	}
+	
+	public String[] getNomsJoueurs() {
+		return nomsJoueurs;
+	}
+
+	public void setNomsJoueurs(String[] nomsJoueurs) {
+		this.nomsJoueurs = nomsJoueurs;
+	}
+
 	private JPanel getMainPanel() {
 		return this.main_panel;
 	}
@@ -172,8 +186,11 @@ public class FenetrePrincipale extends JFrame
 		public void actionPerformed(ActionEvent e) {
 			//Demande le nombre de joueurs
 			JDialogNouveauJoueur d1 = new JDialogNouveauJoueur("nbJoueur");
-			setNbJoueur(d1.getNbJoueur());
-			//initJeu();
+			setNbJoueur(d1.getNbJoueur()); //Récupèration du nombre de joueurs
+			initNomsJoueurs(getNbJoueur()); //Instanciation du tableau de noms de joueurs
+			setNomsJoueurs(d1.getNomJoueurs()); //Remplissage du tableau de noms de joueurs
+			
+			//lancerJeu();
 		}
 	}
 }

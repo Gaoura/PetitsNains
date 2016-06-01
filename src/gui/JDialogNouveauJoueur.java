@@ -35,11 +35,16 @@ class JDialogNouveauJoueur extends JFrame {
        	}
     	JButton valider = new JButton("Valider");
     	valider.addActionListener(new EcouteurNoms());
+    	d1.add(valider);
     	d1.setVisible(true);
     }
     
     private JTextField[] getReponses() {
     	return this.reponses;
+    }
+    
+    public String[] getNomJoueurs() {
+    	return this.nomJoueurs;
     }
     
     private void nombreJoueur() {
