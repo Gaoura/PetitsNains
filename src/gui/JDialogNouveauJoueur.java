@@ -6,19 +6,47 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@SuppressWarnings("serial")
 class JDialogNouveauJoueur extends JFrame {
-	JDialog d1;
-	String nbJoueur;
+	public int nbJoueur;
+	public String[] nomJoueurs;
 
-    public JDialogNouveauJoueur() {
-        initDialogue();
+	private JTextField[] reponses;
+	
+    public JDialogNouveauJoueur(String msg) {
+		nombreJoueur();
+		nomJoueurs = new String[this.getNbJoueur()];
+		reponses = new JTextField[20];
+		nomsJoueurs();
+	}
+    
+    private void nomsJoueurs() {
+    	JDialog d1 = new JDialog(this,"Noms de joueurs",true);
+    	d1.setSize(400,200);
+    	d1.setLayout(new GridLayout(this.getNbJoueur() + 1, 2));
+    	for (int i = 1; i <= this.getNbJoueur(); i++) {
+    		JPanel p = new JPanel();
+    		p.setLayout(new FlowLayout());
+    		JLabel question = new JLabel("Quel est le nom du joueur " + i + " ?");
+    		reponses[i-1] = new JTextField(10);
+    		p.add(question);
+    		p.add(reponses[i-1]);
+    		d1.add(p);
+       	}
+    	JButton valider = new JButton("Valider");
+    	valider.addActionListener(new EcouteurNoms());
+    	d1.setVisible(true);
     }
     
-    private void initDialogue() {
+    private JTextField[] getReponses() {
+    	return this.reponses;
+    }
+    
+    private void nombreJoueur() {
         // A perfect constructor, mostly used.
         // A dialog with current frame as parent
         // a given title, and modal
-        d1 = new JDialog(this,"Nombre de joueurs",true);
+    	JDialog d1 = new JDialog(this,"Nombre de joueurs",true);
         
         // Set size
         d1.setSize(400,150);
@@ -49,23 +77,32 @@ class JDialogNouveauJoueur extends JFrame {
         d1.setVisible(true);
     }
     
-    public String getNbJoueur(){
+    public int getNbJoueur(){
     	return this.nbJoueur;
     } 
     
-    public void setNbJoueur(String str){
-    	this.nbJoueur = str;
+    public void setNbJoueur(int nb){
+    	this.nbJoueur = nb;
     }
     
-    class EcouteurJoueur implements ActionListener
-	{
+    class EcouteurJoueur implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			Object o = e.getSource();
 			JButton b = null;
 			if (o instanceof JButton) b = (JButton) o;
-			setNbJoueur(b.getText());
+			setNbJoueur(Integer.parseInt(b.getText()));
+			dispose();
+		}
+	}
+    
+    class EcouteurNoms implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			for (int i = 0; i < getNbJoueur(); i++)
+				nomJoueurs[i] = new String(getReponses()[i].getText());
 			dispose();
 		}
 	}

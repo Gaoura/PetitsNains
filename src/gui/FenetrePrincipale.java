@@ -171,8 +171,8 @@ public class FenetrePrincipale extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//Demande le nombre de joueurs
-			JDialogNouveauJoueur d1 = new JDialogNouveauJoueur();
-			setNbJoueur(Integer.parseInt(d1.getNbJoueur()));
+			JDialogNouveauJoueur d1 = new JDialogNouveauJoueur("nbJoueur");
+			setNbJoueur(d1.getNbJoueur());
 			//initJeu();
 		}
 	}
