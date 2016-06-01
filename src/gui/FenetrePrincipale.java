@@ -6,21 +6,14 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -36,6 +29,7 @@ public class FenetrePrincipale extends JFrame
 	
 	private int nbJoueur;
 	private String[] nomsJoueurs;
+	private Jeu jeu = new Jeu();
 	
 	public FenetrePrincipale(String titre) {
 		super(titre);
@@ -63,21 +57,17 @@ public class FenetrePrincipale extends JFrame
 		String[][] ligne = new String[15][15];
 		Case[][] cases_plateau = new Case[longueur_tab][hauteur_tab];	
 		
-		for(int i = 0; i < hauteur_tab; i++)
-		{
+		for(int i = 0; i < hauteur_tab; i++) {
 			String[] temp = lignes.get(i).split(" ");
 			for(int j = 0; j < temp.length; j++) ligne[i][j] = temp[j];
 		}
 		
 		// creation du jeu en fonction de ce qu'on obtient grace au fichier damier.txt
-		// E est la premiere case d'une ecurie et V toutes ses autres cases
-		// sauf une case V au centre du damier qui est une case inutile
-		// N est une case normale
 		
 		JPanel panelGauche = new JPanel(new GridBagLayout()); //Le pannel qui contiendra le plateau de jeu
 		GridBagConstraints c = new GridBagConstraints(); //Position de la case dans le GridBagLayout
 		
-		for(int i = 0; i < hauteur_tab; i++)
+		for(int i = 0; i < hauteur_tab; i++) {
 			for(int j = 0; j < longueur_tab; j++) {				
 				if (ligne[i][j].equals("V")) {
 					cases_plateau[i][j] = null;
@@ -91,28 +81,35 @@ public class FenetrePrincipale extends JFrame
 					c.gridwidth = 1;
 					String nomCase = ligne[i][j];
 					
-					System.out.println(nomCase);
 					if(nomCase.contains("marche")) { //Une marche a été trouvée
 						int num = Integer.parseInt(nomCase.substring(nomCase.length()-1)); //extraction du numéro de la marche (c'est toujours le dernier caractère)
 						cases_plateau[i][j] = new CaseMarche(new Coordonnees(i, j), num);
-					} else if (nomCase.contains("ecurie")) {
+					} else if (nomCase.contains("ecurie")) { //Une écurie se trouve ici
 						c.gridheight = 6;
 						c.gridwidth = 6;
+					} else { //C'est une case normale
+						cases_plateau[i][j] = new CaseNormale(new Coordonnees(i, j));
 					}
-					nomCase += ".png";
-					String path = "img/" + nomCase;
-					Icon img = new ImageIcon(path);
-					JLabel comp = new JLabel(img);
 					
-					panelGauche.add(comp, c);
+					Plateau p = new Plateau(cases_plateau);
+					this.jeu.setPlateau(p);
+					
+					nomCase += ".png";
+					Icon img = new ImageIcon("img/" + nomCase);
+					JLabel picLabel = new JLabel(img);
+					
+					panelGauche.add(picLabel, c);
 				}
 			}
+		}
+		
+		
+		
 		
 		initFenetrePrincipale();
 		initMenu();
 		
 		JPanel mainPanel = new JPanel(new GridLayout(1, 2));
-		
 		
 		JPanel panelDroit = new JPanel(); //Le panel d'interaction avec le joueur
 		
@@ -122,6 +119,24 @@ public class FenetrePrincipale extends JFrame
 		this.add(mainPanel);
 		
 		this.setVisible(true);
+	}
+	
+	public void lancerJeu() {
+		Ecurie[] e = new Ecurie[getNbJoueur()];
+		Joueur[] joueurs = new Joueur[getNbJoueur()];
+		for (int i = 0; i < getNbJoueur(); i++) {
+			joueurs[i] = new Joueur(getNomsJoueurs()[i], i, e[i]);
+		}
+		this.jeu.setJoueur(joueurs);
+		
+	}
+
+	public Jeu getJeu() {
+		return jeu;
+	}
+
+	public void setJeu(Jeu jeu) {
+		this.jeu = jeu;
 	}
 
 	private void setNbJoueur(int nb) {
@@ -196,8 +211,9 @@ public class FenetrePrincipale extends JFrame
 			setNbJoueur(d1.getNbJoueur()); //Récupèration du nombre de joueurs
 			initNomsJoueurs(getNbJoueur()); //Instanciation du tableau de noms de joueurs
 			setNomsJoueurs(d1.getNomJoueurs()); //Remplissage du tableau de noms de joueurs
+			//getJeu().setJoueurCourant(d1.getPremierJoueur());
 			
-			//lancerJeu();
+			lancerJeu();
 		}
 	}
 }
