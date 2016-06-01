@@ -11,8 +11,8 @@ public class Jeu implements Tour{
 	private Joueur[] joueur; //Liste des joueurs
 	private Plateau plateau; //plateau du jeu
 	private int joueurCourant = 0; //le joueur en cour
-	private Hashtable<Integer, String> ht; //la liste des pivots
-	private Hashtable<Integer, String> htInv; //la liste des pivots pour les mouvements de retour
+	private Hashtable<Integer, String> ht = new Hashtable<Integer, String>(); //la liste des pivots
+	private Hashtable<Integer, String> htInv = new Hashtable<Integer, String>(); //la liste des pivots pour les mouvements de retour
 	
 	public Jeu(Joueur[] j, Plateau p) {
 		this.setJoueur(j);
@@ -27,16 +27,20 @@ public class Jeu implements Tour{
 	private void setHt() {
 		//Lis la liste des pivots stockés dans le fichier "mouvement.txt"
 		//et range les données dans une hashtable
-		String pos, dir;
+		String pos, posX, posY, dir;
 		try {
-			Scanner sc = new Scanner (new FileReader("mouvement.txt"));
-			do {
-				sc.findInLine("(\\w+):(\\w+)");
+			Scanner sc = new Scanner (new FileReader("src/jeu/mouvement.txt"));
+			while (sc.hasNextLine())
+			{
+				sc.nextLine();
+				sc.findInLine("(\\w+),(\\w+):(\\w+)");
 				MatchResult result = sc.match();
-				pos = result.group(1);
-				dir = result.group(2);
-				ht.put(pos.hashCode(), dir);
-			} while (sc.nextLine() != null);
+				posX = result.group(1);
+				posY = result.group(2);
+				dir = result.group(3);
+				pos = posX + "," + posY;
+				this.ht.put(pos.hashCode(), dir);
+			}
 			sc.close();
 		} catch (FileNotFoundException e) {
 			    System.out.println ("Le fichier n'a pas été trouvé");
@@ -44,14 +48,18 @@ public class Jeu implements Tour{
 		}
 		
 		try {
-			Scanner sc = new Scanner (new FileReader("mouvementInv.txt"));
-			do {
-				sc.findInLine("(\\w+):(\\w+)");
+			Scanner sc = new Scanner (new FileReader("src/jeu/mouvementInv.txt"));
+			while (sc.hasNextLine())
+			{
+				sc.nextLine();
+				sc.findInLine("(\\w+),(\\w+):(\\w+)");
 				MatchResult result = sc.match();
-				pos = result.group(1);
-				dir = result.group(2);
-				ht.put(pos.hashCode(), dir);
-			} while (sc.nextLine() != null);
+				posX = result.group(1);
+				posY = result.group(2);
+				dir = result.group(3);
+				pos = posX + "," + posY;
+				this.htInv.put(pos.hashCode(), dir);
+			}
 			sc.close();
 		} catch (FileNotFoundException e) {
 			    System.out.println ("Le fichier n'a pas été trouvé");
@@ -99,9 +107,9 @@ public class Jeu implements Tour{
 	public int lancerDe() {
 		//Lance un dé dont le résultat sera compris entre
 		//1 inclus et 7 exclus
-		int Min = 1;
-		int Max = 7;
-		return Min + (int)(Math.random() * ((Max - Min) + 1));
+		int min = 1;
+		int max = 6;
+		return min + (int)(Math.random() * ((max - min) + 1));
 	}
 
 	@Override
