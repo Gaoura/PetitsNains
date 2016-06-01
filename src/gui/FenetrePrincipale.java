@@ -1,38 +1,43 @@
 package gui;
 
+import jeu.*;
+
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.HeadlessException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JButton;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import jeu.Case;
 
 @SuppressWarnings("serial")
 public class FenetrePrincipale extends JFrame
 {
 	
-	private JTextField tfValeur;
 	private int nbJoueur;
-	private JPanel main_panel;
 	private String[] nomsJoueurs;
 	
-	public FenetrePrincipale(String titre)
-	{
+	public FenetrePrincipale(String titre) {
 		super(titre);
 		
 		ArrayList<String> lignes = new ArrayList<String>();
@@ -56,7 +61,7 @@ public class FenetrePrincipale extends JFrame
 		// - le nombre de caracteres sur la ligne 0
 		// - le nombre de String dans la liste
 		String[][] ligne = new String[15][15];
-		Case[][] cases_plateau = new Case[longueur_tab][hauteur_tab];		
+		Case[][] cases_plateau = new Case[longueur_tab][hauteur_tab];	
 		
 		for(int i = 0; i < hauteur_tab; i++)
 		{
@@ -69,47 +74,53 @@ public class FenetrePrincipale extends JFrame
 		// sauf une case V au centre du damier qui est une case inutile
 		// N est une case normale
 		
+		JPanel panelGauche = new JPanel(new GridBagLayout()); //Le pannel qui contiendra le plateau de jeu
+		GridBagConstraints c = new GridBagConstraints(); //Position de la case dans le GridBagLayout
+		
 		for(int i = 0; i < hauteur_tab; i++)
-			for(int j = 0; j < longueur_tab; j++)
-			{				
-				
+			for(int j = 0; j < longueur_tab; j++) {				
 				if (ligne[i][j].equals("V")) {
 					cases_plateau[i][j] = null;
 				} else {
 					//on récupère le nom, on ajoute.png et on ouvre le fichier
 					//cas spécial : si le nom commence par "marche"
 					//extraire le numéro de la marche 
+					c.gridx = j;
+					c.gridy = i;
+					c.gridheight = 1;
+					c.gridwidth = 1;
+					String nomCase = ligne[i][j];
+					
+					System.out.println(nomCase);
+					if(nomCase.contains("marche")) { //Une marche a été trouvée
+						int num = Integer.parseInt(nomCase.substring(nomCase.length()-1)); //extraction du numéro de la marche (c'est toujours le dernier caractère)
+						cases_plateau[i][j] = new CaseMarche(new Coordonnees(i, j), num);
+					} else if (nomCase.contains("ecurie")) {
+						c.gridheight = 6;
+						c.gridwidth = 6;
+					}
+					nomCase += ".png";
+					String path = "img/" + nomCase;
+					Icon img = new ImageIcon(path);
+					JLabel comp = new JLabel(img);
+					
+					panelGauche.add(comp, c);
 				}
 			}
-						/*// partie sale, on se fie aux coordonnees de la case pour savoir son numero de marche
-						int num = 0;
-						if (i == 7)
-							if (j < 7)
-								num = j;
-							else
-								num = hauteur_tab - j - 1;
-						else
-							if (i < 7)
-								num = i;
-							else
-								num = hauteur_tab - i - 1;
-						
-						cases_plateau[i][j] = new CaseMarche(new Coordonnees(i, j), num);*/
 		
 		initFenetrePrincipale();
 		initMenu();
 		
-		main_panel = new JPanel(new GridLayout(2, 1));
-		JPanel panel_jeu = new JPanel(new GridBagLayout());
+		JPanel mainPanel = new JPanel(new GridLayout(1, 2));
 		
-		JPanel panel_haut = new JPanel();
-		JPanel panel_bas = new JPanel();
 		
-		//getMainPanel().add(new JLabel("Je suis une carotte"));
+		JPanel panelDroit = new JPanel(); //Le panel d'interaction avec le joueur
 		
-		this.add(this.getMainPanel());
-		/*main_panel.add(panel_haut);
-		main_panel.add(panel_bas);*/
+		mainPanel.add(panelGauche);
+		mainPanel.add(panelDroit);
+		
+		this.add(mainPanel);
+		
 		this.setVisible(true);
 	}
 
@@ -131,10 +142,6 @@ public class FenetrePrincipale extends JFrame
 
 	public void setNomsJoueurs(String[] nomsJoueurs) {
 		this.nomsJoueurs = nomsJoueurs;
-	}
-
-	private JPanel getMainPanel() {
-		return this.main_panel;
 	}
 	
 	private void initFenetrePrincipale() {
@@ -184,7 +191,7 @@ public class FenetrePrincipale extends JFrame
 	{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//Demande le nombre de joueurs
+			//Dialogue de récupération des informations
 			JDialogNouveauJoueur d1 = new JDialogNouveauJoueur("nbJoueur");
 			setNbJoueur(d1.getNbJoueur()); //Récupèration du nombre de joueurs
 			initNomsJoueurs(getNbJoueur()); //Instanciation du tableau de noms de joueurs
