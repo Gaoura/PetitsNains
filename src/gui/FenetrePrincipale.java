@@ -1,22 +1,17 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -34,6 +29,7 @@ public class FenetrePrincipale extends JFrame
 	
 	private JTextField tfValeur;
 	
+	@SuppressWarnings("unused")
 	public FenetrePrincipale(String titre)
 	{
 		super(titre);
@@ -53,7 +49,7 @@ public class FenetrePrincipale extends JFrame
 			
 			while (sc.hasNextLine())
 				lignes.add(sc.nextLine());
-			lignes.add(sc.nextLine());
+			//lignes.add(sc.nextLine());
 			
 			sc.close();
 		} catch (FileNotFoundException e) {
@@ -75,12 +71,12 @@ public class FenetrePrincipale extends JFrame
 			String[] temp = lignes.get(i).split(" ");
 			for(int j = 0; j < temp.length; j++)
 				ligne[j][i] = temp[j];
-		}	// avec ça on a un tableau plus simple à manipuler
+		}	// avec �a on a un tableau plus simple a� manipuler
 
 		ArrayList<Coordonnees> liste_ecuries = new ArrayList<Coordonnees>();
 		
-		// création du jeu en fonction de ce qu'on obtient grâce au fichier damier.txt
-		// E est la première case d'une écurie et V toutes ses autres cases
+		// creation du jeu en fonction de ce qu'on obtient grace au fichier damier.txt
+		// E est la premiere case d'une ecurie et V toutes ses autres cases
 		// sauf une case V au centre du damier qui est une case inutile
 		// N est une case normale
 		for(int i = 0; i < hauteur_tab; i++)
@@ -97,7 +93,7 @@ public class FenetrePrincipale extends JFrame
 						cases_plateau[i][j] = new CaseNormale(new Coordonnees(i, j));
 						break;
 					case "M" :
-						// partie sale, on se fie aux coordonnées de la case pour savoir son numero de marche
+						// partie sale, on se fie aux coordonnees de la case pour savoir son numero de marche
 						int num = 0;
 						if (i == 7)
 							if (j < 7)
@@ -118,7 +114,7 @@ public class FenetrePrincipale extends JFrame
 		int y = 0;
 		boolean fini = false;
 		
-		// boucle pour trouver les dimensions d'une écurie dans le damier 
+		// boucle pour trouver les dimensions d'une ecurie dans le damier 
 		for (int i = 0; i < hauteur_tab; i++)
 		{
 			if (fini)
@@ -143,12 +139,12 @@ public class FenetrePrincipale extends JFrame
 						x++;
 						i++;
 					}
-					// on coupe la boucle puisque la recherche est terminée;
+					// on coupe la boucle puisque la recherche est terminee;
 					fini = true;
 					break;
 				}		
 		}		
-		// maintenant on a : la taille d'une ecurie, une liste de position du coin supérieur gauche de chaque écurie
+		// maintenant on a : la taille d'une ecurie, une liste de position du coin superieur gauche de chaque ecurie
 		// on va donc pouvoir faire les affichages adéquats
 		
 		
@@ -160,10 +156,10 @@ public class FenetrePrincipale extends JFrame
 		JPanel panel_jeu = new JPanel(new GridBagLayout());
 		
 		//------------------------------------------------------------------------------------------------------------------
-		// piqué sur openclassrooms https://openclassrooms.com/courses/apprenez-a-programmer-en-java/positionner-des-boutons
+		// pique sur openclassrooms https://openclassrooms.com/courses/apprenez-a-programmer-en-java/positionner-des-boutons
 		// à modifier
 		/*
-	    //On crée nos différents conteneurs de couleurs différentes
+	    //On cree nos differents conteneurs de couleurs differentes
 	    JPanel cell1 = new JPanel();
 	    cell1.setBackground(Color.YELLOW);
 
@@ -191,7 +187,7 @@ public class FenetrePrincipale extends JFrame
 		 //L'objet servant à positionner les composants
 	    GridBagConstraints gbc = new GridBagConstraints();
 			
-	    //On positionne la case de départ du composant
+	    //On positionne la case de depart du composant
 	    gbc.gridx = 0;
 	    gbc.gridy = 0;
 	    //La taille en hauteur et en largeur
@@ -214,13 +210,13 @@ public class FenetrePrincipale extends JFrame
 	    gbc.gridy = 1;
 	    gbc.gridwidth = 1;
 	    gbc.gridheight = 2;
-	    //Celle-ci indique que la cellule se réplique de façon verticale
+	    //Celle-ci indique que la cellule se replique de facon verticale
 	    gbc.fill = GridBagConstraints.VERTICAL;
 	    panel_jeu.add(cell5, gbc);
 	    //---------------------------------------------
 	    gbc.gridx = 1;
 	    gbc.gridheight = 1;
-	    //Celle-ci indique que la cellule se réplique de façon horizontale
+	    //Celle-ci indique que la cellule se replique de facon horizontale
 	    gbc.fill = GridBagConstraints.HORIZONTAL;
 	    gbc.gridwidth = GridBagConstraints.REMAINDER;
 	    panel_jeu.add(cell6, gbc);
@@ -272,12 +268,12 @@ public class FenetrePrincipale extends JFrame
 	  Toolkit tk = Toolkit.getDefaultToolkit();    
 		Dimension d = tk.getScreenSize();
 		int hauteurEcran, largeurEcran, hauteurFenetre,	largeurFenetre,	xFenetre,	yFenetre;    
-		hauteurEcran = d.height;	// on récupère la hauteur de l'écran
-		largeurEcran = d.width;		// on récupère la largeur de l'écran
+		hauteurEcran = d.height;	// on recupere la hauteur de l'ecran
+		largeurEcran = d.width;		// on recupere la largeur de l'ecran
 		hauteurFenetre = hauteurEcran/2;
-		largeurFenetre = largeurEcran/2;	// la fenêtre prend 1/4 de l'écran
+		largeurFenetre = largeurEcran/2;	// la fenetre prend 1/4 de l'ecran
 		xFenetre    =    largeurEcran/3;
-		yFenetre    =    hauteurEcran/3;	// elle est placée à 1/3 du coin haut gauche
+		yFenetre    =    hauteurEcran/3;	// elle est placee a� 1/3 du coin haut gauche
 		this.setLocation(xFenetre,yFenetre); 
 		this.setSize(largeurFenetre, hauteurFenetre);
 		
@@ -314,7 +310,7 @@ public class FenetrePrincipale extends JFrame
 		edition.add(coller);
 		
 		// Menu Démarrer
-		JMenuItem demarrer = new JMenuItem("Démarrer");
+		JMenuItem demarrer = new JMenuItem("Demarrer");
 		menuBar.add(demarrer);
 		
 		this.setJMenuBar(menuBar);

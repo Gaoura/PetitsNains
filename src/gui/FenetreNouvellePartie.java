@@ -19,7 +19,7 @@ public class FenetreNouvellePartie extends JDialog
 	public FenetreNouvellePartie(JFrame princ)
 	{
 		super(princ, "Nouvelle partie", true);
-		this.couleur = "Rouge"; // couleur par défaut
+		this.couleur = "Rouge"; // couleur par defaut
 		
 		initFenetreNouvellePartie();
 		
@@ -56,10 +56,10 @@ public class FenetreNouvellePartie extends JDialog
 		Toolkit tk = Toolkit.getDefaultToolkit();    
 		Dimension d = tk.getScreenSize();
 		int hauteurEcran, largeurEcran,	xFenetre,	yFenetre;    
-		hauteurEcran = d.height;	// on récupère la hauteur de l'écran
-		largeurEcran = d.width;		// on récupère la largeur de l'écran
+		hauteurEcran = d.height;	// on recupere la hauteur de l'ecran
+		largeurEcran = d.width;		// on recupere la largeur de l'ecran
 		xFenetre = largeurEcran/3;
-		yFenetre = hauteurEcran/3;	// elle est placée à 1/3 du coin haut gauche
+		yFenetre = hauteurEcran/3;	// elle est placee à 1/3 du coin haut gauche
 		this.setLocation(xFenetre,yFenetre);
 		this.setSize(450, 150);		
 	}
