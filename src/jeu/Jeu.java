@@ -14,6 +14,10 @@ public class Jeu implements Tour{
 	private Hashtable<Integer, String> ht = new Hashtable<Integer, String>(); //la liste des pivots
 	private Hashtable<Integer, String> htInv = new Hashtable<Integer, String>(); //la liste des pivots pour les mouvements de retour
 	
+	public Jeu() {
+		this.setHt();
+	}
+	
 	public Jeu(Joueur[] j, Plateau p) {
 		this.setJoueur(j);
 		this.setPlateau(p);
