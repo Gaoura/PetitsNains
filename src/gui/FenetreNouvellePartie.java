@@ -15,13 +15,12 @@ public class FenetreNouvellePartie extends JDialog
 {
 	
 	private String couleur;
+	private String nbJoueur;
 
 	public FenetreNouvellePartie(JFrame princ)
 	{
 		super(princ, "Nouvelle partie", true);
 		this.couleur = "Rouge"; // couleur par defaut
-		
-		initFenetreNouvellePartie();
 		
 		JPanel main_panel = new JPanel();
 		this.add(main_panel);
@@ -30,15 +29,32 @@ public class FenetreNouvellePartie extends JDialog
 		main_panel.add(panel_haut);		
 		main_panel.add(panel_bas);
 		
-		JLabel lValeur = new JLabel("Choisissez votre couleur :");
-		lValeur.setBounds(30, 20, 50, 50);	// on place et on dimensionne...
-		panel_haut.add(lValeur);
+		JLabel question = new JLabel("Combien de joueurs ?");
+		question.setBounds(30, 20, 50, 50);
+		panel_haut.add(question);
 		
-		JButton[] boutons = new JButton[4];
+		JButton[] bouttonsReponse = new JButton[3];
+		bouttonsReponse[0] = new JButton("2");
+		bouttonsReponse[1] = new JButton("3");
+		bouttonsReponse[2] = new JButton("4");
+		
+		for (int i = 0; i < bouttonsReponse.length; i++) {
+			panel_bas.add(bouttonsReponse[i]);
+			bouttonsReponse[i].addActionListener(new EcouteurJoueur());
+		}
+			
+		System.out.println(this.nbJoueur);
+		
+		
+		/*JButton[] boutons = new JButton[4];
 		boutons[0] = new JButton("Jaune");
 		boutons[1] = new JButton("Vert");
 		boutons[2] = new JButton("Bleu");
 		boutons[3] = new JButton("Rouge");
+		
+		JLabel lValeur = new JLabel("Choisissez votre couleur :");
+		lValeur.setBounds(30, 20, 50, 50);	// on place et on dimensionne...
+		panel_haut.add(lValeur);
 		
 		for (int i = 0; i < boutons.length; i++)
 			panel_bas.add(boutons[i]);
@@ -46,27 +62,18 @@ public class FenetreNouvellePartie extends JDialog
 		boutons[0].addActionListener(new EcouteurJaune());
 		boutons[1].addActionListener(new EcouteurVert());
 		boutons[2].addActionListener(new EcouteurBleu());
-		boutons[3].addActionListener(new EcouteurRouge());
+		boutons[3].addActionListener(new EcouteurRouge());*/
 		
 		this.setVisible(true);	
 	}
-	
-	private void initFenetreNouvellePartie()
-	{
-		Toolkit tk = Toolkit.getDefaultToolkit();    
-		Dimension d = tk.getScreenSize();
-		int hauteurEcran, largeurEcran,	xFenetre,	yFenetre;    
-		hauteurEcran = d.height;	// on recupere la hauteur de l'ecran
-		largeurEcran = d.width;		// on recupere la largeur de l'ecran
-		xFenetre = largeurEcran/3;
-		yFenetre = hauteurEcran/3;	// elle est placee à 1/3 du coin haut gauche
-		this.setLocation(xFenetre,yFenetre);
-		this.setSize(450, 150);		
-	}
 
-	private void setCouleur(String string)
+	private void setCouleur(String str)
 	{
-		this.couleur = string;
+		this.couleur = str;
+	}
+	
+	private void setNbJoueur(String str) {
+		this.nbJoueur = str;
 	}
 
 	
@@ -106,6 +113,19 @@ public class FenetreNouvellePartie extends JDialog
 		public void actionPerformed(ActionEvent e)
 		{
 			setCouleur("Rouge");
+			dispose();
+		}
+	}
+	
+	class EcouteurJoueur implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			Object o = e.getSource();
+			JButton b = null;
+			if (o instanceof JButton) b = (JButton) o;
+			setNbJoueur(b.getText());
 			dispose();
 		}
 	}

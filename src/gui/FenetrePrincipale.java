@@ -19,8 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import jeu.Case;
-import jeu.CaseMarche;
-import jeu.CaseNormale;
 import jeu.Coordonnees;
 
 @SuppressWarnings("serial")
@@ -29,7 +27,6 @@ public class FenetrePrincipale extends JFrame
 	
 	private JTextField tfValeur;
 	
-	@SuppressWarnings("unused")
 	public FenetrePrincipale(String titre)
 	{
 		super(titre);
@@ -60,40 +57,37 @@ public class FenetrePrincipale extends JFrame
 		int longueur_tab = lignes.get(0).split(" ").length;
 		int hauteur_tab = lignes.size();
 		
+		
 		// on fait un tableau de dimensions :
 		// - le nombre de caracteres sur la ligne 0
 		// - le nombre de String dans la liste
-		String[][] ligne = new String[hauteur_tab][hauteur_tab];
-		Case[][] cases_plateau = new Case[hauteur_tab][hauteur_tab];		
+		String[][] ligne = new String[15][15];
+		Case[][] cases_plateau = new Case[longueur_tab][hauteur_tab];		
 		
 		for(int i = 0; i < hauteur_tab; i++)
 		{
 			String[] temp = lignes.get(i).split(" ");
-			for(int j = 0; j < temp.length; j++)
-				ligne[j][i] = temp[j];
+			for(int j = 0; j < temp.length; j++) ligne[i][j] = temp[j];
 		}	// avec Áa on a un tableau plus simple a† manipuler
-
-		ArrayList<Coordonnees> liste_ecuries = new ArrayList<Coordonnees>();
 		
 		// creation du jeu en fonction de ce qu'on obtient grace au fichier damier.txt
 		// E est la premiere case d'une ecurie et V toutes ses autres cases
 		// sauf une case V au centre du damier qui est une case inutile
 		// N est une case normale
+		
 		for(int i = 0; i < hauteur_tab; i++)
-			for(int j = 0; j < hauteur_tab; j++)
-			{					
-				switch (ligne[i][j])
-				{
-					case "E" :
-						liste_ecuries.add(new Coordonnees(i, j));
-					case "V" :
-						cases_plateau[i][j] = null;
-						break;
-					case "N" :
-						cases_plateau[i][j] = new CaseNormale(new Coordonnees(i, j));
-						break;
-					case "M" :
-						// partie sale, on se fie aux coordonnees de la case pour savoir son numero de marche
+			for(int j = 0; j < longueur_tab; j++)
+			{				
+				
+				if (ligne[i][j].equals("V")) {
+					cases_plateau[i][j] = null;
+				} else {
+					//on rÈcupËre le nom, on ajoute.png et on ouvre le fichier
+					//cas spÈcial : si le nom commence par "marche"
+					//extraire le numÈro de la marche 
+				}
+			}
+						/*// partie sale, on se fie aux coordonnees de la case pour savoir son numero de marche
 						int num = 0;
 						if (i == 7)
 							if (j < 7)
@@ -106,9 +100,7 @@ public class FenetrePrincipale extends JFrame
 							else
 								num = hauteur_tab - i - 1;
 						
-						cases_plateau[i][j] = new CaseMarche(new Coordonnees(i, j), num);
-				}
-			}
+						cases_plateau[i][j] = new CaseMarche(new Coordonnees(i, j), num);*/
 		
 		int x = 0;
 		int y = 0;
@@ -143,7 +135,7 @@ public class FenetrePrincipale extends JFrame
 					fini = true;
 					break;
 				}		
-		}		
+		}	
 		// maintenant on a : la taille d'une ecurie, une liste de position du coin superieur gauche de chaque ecurie
 		// on va donc pouvoir faire les affichages ad√©quats
 		
@@ -184,7 +176,7 @@ public class FenetrePrincipale extends JFrame
 	    JPanel cell8 = new JPanel();
 	    cell8.setBackground(Color.DARK_GRAY);
 	    
-		 //L'objet servant a† positionner les composants
+		 //L'objet servant √† positionner les composants
 	    GridBagConstraints gbc = new GridBagConstraints();
 			
 	    //On positionne la case de depart du composant
@@ -310,9 +302,9 @@ public class FenetrePrincipale extends JFrame
 				
 				// On calcule la sqrt et on place le r√©sultat dans le champ de saisie
 				if (valeur > 0)
-						tfValeur.setText("" + Math.sqrt(valeur));
+					tfValeur.setText("" + Math.sqrt(valeur));
 				else
-						tfValeur.setText("Error !");
+					tfValeur.setText("Error !");
 	    }
 	}
 	
@@ -336,7 +328,7 @@ public class FenetrePrincipale extends JFrame
 		@Override
 	    public void actionPerformed(ActionEvent e)
 			{
-				// On remet a zero le champ de saisie
+				// On remet √† z√©ro le champ de saisie
 				tfValeur.setText("0");
 	    }
 	}
@@ -355,7 +347,6 @@ public class FenetrePrincipale extends JFrame
 	class EcouteurNouvellePartie implements ActionListener
 	{
 		private JFrame principale;
-		private FenetreNouvellePartie fen;
 		
 		public EcouteurNouvellePartie(JFrame princ)
 		{
@@ -365,7 +356,7 @@ public class FenetrePrincipale extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			fen = new FenetreNouvellePartie(this.principale);
+			
 		}
 	}
 }
