@@ -1,14 +1,12 @@
 package jeu;
 
-public class Ecurie extends Reserve
-{
+public class Ecurie extends Reserve {
 	// Nombre de chevaux pouvant encore entrer en jeu
 	private int depart;
 	// Nombre de chevaux a avoir fini leur tour de plateau
 	private int arrivee;
 
-	public Ecurie(int n) throws EcurieException
-  {
+	public Ecurie(int n) throws EcurieException {
 		this.setDepart(n);
 		this.setArrivee(0);
 	}
@@ -23,26 +21,22 @@ public class Ecurie extends Reserve
               #####  ######   #    ####     #           #####  ######   #    ####
   *//////////////////////////////////////////////////////////////////////////////////////////
 
-	public int getDepart()
-  {
+	public int getDepart() {
 		return this.depart;
 	}
 
-	public int getArrivee()
-  {
+	public int getArrivee() {
 		return this.arrivee;
 	}
 
-	private void setDepart(int depart) throws EcurieException
-  {
+	private void setDepart(int depart) throws EcurieException {
 		if (depart < 0)
 			throw new EcurieException("Plus aucun cheval dans l'ecurie");
 
 		this.depart = depart;
 	}
 
-	private void setArrivee(int arrivee)
-  {
+	private void setArrivee(int arrivee) {
 		this.arrivee = arrivee;
 	}
 
@@ -57,8 +51,7 @@ public class Ecurie extends Reserve
   *//////////////////////////////////////////////////////////////////////////////////////////
 
 	// Fait revenir un cheval a l'ecurie d'arrivee apres qu'il ait fini son tour de plateau
-	public void chevalArrivee()
-	{
+	public void chevalArrivee() {
 		this.setArrivee(this.arrivee + 1);
 	}
 
@@ -72,9 +65,13 @@ public class Ecurie extends Reserve
 
   // Faire rentrer une piece dans l'ecurie de depart (degagee par un adversaire)
 	@Override
-	public void rentrerPiece(Piece p)
-  {
-		this.setDepart(this.depart + 1);
+	public void rentrerPiece() {
+		try {
+			this.setDepart(this.depart + 1);
+		} catch (EcurieException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

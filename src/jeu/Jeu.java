@@ -20,8 +20,7 @@ public class Jeu implements Tour
   // Liste des pivots pour les mouvements de retour en arriere
 	private Hashtable<Integer, String> htInv;
 
-	public Jeu()
-  {
+	public Jeu() {
 		this.setHt();
 	}
 
@@ -158,7 +157,7 @@ public class Jeu implements Tour
 			if (inv == 1)
 				if (ht.containsKey(hashedKey))
 					p.setDir(ht.get(hashedKey));
-			else //Si on est en d�placement invers�
+			else //Si on est en deplacement inverse
 				if (htInv.containsKey(hashedKey))
 					p.setDir(htInv.get(hashedKey));
 
@@ -183,30 +182,21 @@ public class Jeu implements Tour
 
 			temp.setAbscisse(temp.getAbscisse()+abs);
 			temp.setOrdonnee(temp.getOrdonnee()+ord); //Acceder a la case suivante
-			if ((((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp)).getOccupant() != null))
-      {
-					if (score - i != 1)
-          {
-						// Si le score est different de 1 et que
-						// la case suivante a un occupant, on doit repartir dans l'autre sens
-						inv *= -1;
-						ord *= -1;
-						abs *= -1;
-						temp.setAbscisse(caseSuivant.getAbscisse()+abs);
-						temp.setOrdonnee(caseSuivant.getOrdonnee()+ord); //Acceder a la case suivante
-					}
-          else
-          {
+			if ((((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp)).getOccupant() != null)) {
+				if (score - i != 1) {
+					// Si le score est different de 1 et que
+					// la case suivante a un occupant, on doit repartir dans l'autre sens
+					inv *= -1;
+					ord *= -1;
+					abs *= -1;
+					temp.setAbscisse(caseSuivant.getAbscisse()+abs);
+					temp.setOrdonnee(caseSuivant.getOrdonnee()+ord); //Acceder a la case suivante
+				} else {
 						// sortir la piece (score == 1)
 						// et prendre sa place
 						CaseOccupable nvlEmplacement = ((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp));
-						try
-            {
-              // Le cheval est retourne dans son ecurie
-							((Ecurie) nvlEmplacement.getOccupant().getProprietaire().getStock()).sortirCheval();
-						}
-            // l'exception ne peut pas se produire puisqu'on ajoute un cheval
-            catch (EcurieException e) {}
+						// Le cheval est retourne dans son ecurie
+						((Ecurie) nvlEmplacement.getOccupant().getProprietaire().getStock()).rentrerPiece();
 
 						this.getJoueurCourant().remove(nvlEmplacement.getOccupant());
 						caseSuivant = nvlEmplacement.getPosition();
@@ -224,94 +214,89 @@ public class Jeu implements Tour
 		}
 	}
 
-  public void sortirPiece() throws CaseDepartDejaOccupeeException, ChevalException, EcurieException
-  {
-    // La position de depart est fonction du numero du joueur courant
-  	// 0 = 0,6
-  	// 1 = 8,0
-  	// 2 = 14,8
-  	// 3 = 6,14
-  	Coordonnees c = null;
-  	switch (this.getNumJoueurCourant())
-    {
-  		case 0 :
-  			c = new Coordonnees(0,6);
-  			break;
-  		case 1 :
-  			c = new Coordonnees(8,0);
-  			break;
-  		case 2 :
-  			c = new Coordonnees(14,8);
-  			break;
-  		case 3 :
-  			c = new Coordonnees(6,14);
-  			break;
+	public void sortirPiece() throws CaseDepartDejaOccupeeException, ChevalException, EcurieException {
+		// La position de depart est fonction du numero du joueur courant
+		// 0 = 0,6
+		// 1 = 8,0
+		// 2 = 14,8
+		// 3 = 6,14
+		Coordonnees c = null;
+		switch (this.getNumJoueurCourant()) {
+			case 0 :
+				c = new Coordonnees(0,6);
+				break;
+			case 1 :
+				c = new Coordonnees(8,0);
+				break;
+			case 2 :
+				c = new Coordonnees(14,8);
+				break;
+			case 3 :
+				c = new Coordonnees(6,14);
+				break;
+		}
+	
+	    // on cree la piece que l'on va sortir de l'ecurie, on sait que :
+	    // - son proprietaire est le joueur courant
+	    // - son nom est "cheval" + un numero fonction du nombre de cheval deja dans la liste du joueur
+	    // - sa case sera, si la pîece est ajoutee, la case de depart du joueur
+	    //    (sinon elle sera detruite de toute facon)
+	    // - les cases de depart des joueurs se trouvant sur des pivots, on recupere la direction
+	    //    de la piece directement dans la hashtable
+	    Piece p = new Piece(this.getJoueurCourant(),
+	                        "cheval" + (this.getJoueurCourant().size() + 1),
+	                        this.getPlateau().getCaseDepuisCoordonnees(c),
+	                        this.ht.get(c.toString().hashCode()));
+	
+	    // on regarde s'il y a un occupant sur la case de depart du joueur
+	  	Piece occupantDepart = ((CaseNormale) this.getPlateau().getCaseDepuisCoordonnees(c)).getOccupant();
+	
+	    // s'il n'y en a pas
+	  	if (occupantDepart == null)
+	      // on peut ajouter la piece au jeu
+	  		this.ajout(p);
+	    // sinon s'il y a deja une piece
+	    else
+	      // et que le proprietaire de cette piece est different
+	      // du joueur voulant sortir sa piece de l'ecurie
+	      if (occupantDepart.getProprietaire() != this.getJoueurCourant()) {
+	    		// Le cheval sur la case de depart retourne a son ecurie
+	    		this.rentrerPiece(occupantDepart);
+	        // puis on peut ajouter la piece du joueur courant au jeu
+	    		ajout(p);
+	  	  }
+	      // sinon si le proprietaire et le joueur courant sont identiques, il y a Exception
+	      else
+	  		  throw new CaseDepartDejaOccupeeException();
   	}
 
-    // on cree la piece que l'on va sortir de l'ecurie, on sait que :
-    // - son proprietaire est le joueur courant
-    // - son nom est "cheval" + un numero fonction du nombre de cheval deja dans la liste du joueur
-    // - sa case sera, si la pîece est ajoutee, la case de depart du joueur
-    //    (sinon elle sera detruite de toute facon)
-    // - les cases de depart des joueurs se trouvant sur des pivots, on recupere la direction
-    //    de la piece directement dans la hashtable
-    Piece p = new Piece(this.getJoueurCourant(),
-                        "cheval" + (this.getJoueurCourant().size() + 1),
-                        this.getPlateau().getCaseDepuisCoordonnees(c),
-                        this.ht.get(c.toString().hashCode()));
-
-    // on regarde s'il y a un occupant sur la case de depart du joueur
-  	Piece occupantDepart = ((CaseNormale) this.getPlateau().getCaseDepuisCoordonnees(c)).getOccupant();
-
-    // s'il n'y en a pas
-  	if (occupantDepart == null)
-      // on peut ajouter la piece au jeu
-  		this.ajout(p);
-    // sinon s'il y a deja une piece
-    else
-      // et que le proprietaire de cette piece est different
-      // du joueur voulant sortir sa piece de l'ecurie
-      if (occupantDepart.getProprietaire() != this.getJoueurCourant())
-      {
-    		// Le cheval sur la case de depart retourne a son ecurie
-    		this.rentrerPiece(occupantDepart);
-        // puis on peut ajouter la piece du joueur courant au jeu
-    		ajout(p);
-  	  }
-      // sinon si le proprietaire et le joueur courant sont identiques, il y a Exception
-      else
-  		  throw new CaseDepartDejaOccupeeException();
-  }
-
-  // Renvoie une piece dans l'ecurie de depart de son proprietaire
-  private void rentrerPiece(Piece p)
-  {
-    if (p == null)
-      throw new ChevalException("Cheval introuvable");
-
-    // on enleve la piece de la liste de pieces de son proprietaire
-    p.getProprietaire().getPieces().remove(p);
-    // la case de la piece ne la contient plus
-    ((CaseNormale) p.getPos()).setOccupant(null);
-    // et la piece n'a plus de case
-    p.setPos(null);
-    // enfin on rentre une piece dans l'ecurie de depart
-    p.getProprietaire().getStock().rentrerPiece(p);
+	// Renvoie une piece dans l'ecurie de depart de son proprietaire
+	private void rentrerPiece(Piece p) throws ChevalException {
+	    if (p == null)
+	      throw new ChevalException("Cheval introuvable");
+	
+	    // on enleve la piece de la liste de pieces de son proprietaire
+	    p.getProprietaire().getPieces().remove(p);
+	    // la case de la piece ne la contient plus
+	    ((CaseNormale) p.getPos()).setOccupant(null);
+	    // et la piece n'a plus de case
+	    p.setPos(null);
+	    // enfin on rentre une piece dans l'ecurie de depart
+	    p.getProprietaire().getStock().rentrerPiece();
 	}
 
 
-  // Ajoute une piece au jeu :
-  // - ajoute la piece a liste de pieces du joueur
-  // - ajoute la piece a la case
-  // - modifie l'ecurie du joueur
-  public void ajout(Piece p) throws ChevalException, EcurieException
-  {
-    if (p == null)
-      throw new ChevalException("Cheval introuvable");
-
-    // on modifie l'ecurie en premier pour verifier que l'on a aucun probleme avec cet ajout
-    this.getJoueurCourant().getStock().sortirPiece(p);
-    this.getJoueurCourant().add(p);
-    ((CaseNormale) p.getPos()).setOccupant(p);
-  }
+	  // Ajoute une piece au jeu :
+	  // - ajoute la piece a liste de pieces du joueur
+	  // - ajoute la piece a la case
+	  // - modifie l'ecurie du joueur
+	public void ajout(Piece p) throws ChevalException, EcurieException {
+	    if (p == null)
+	      throw new ChevalException("Cheval introuvable");
+	
+	    // on modifie l'ecurie en premier pour verifier que l'on a aucun probleme avec cet ajout
+	    this.getJoueurCourant().getStock().sortirPiece(p);
+	    this.getJoueurCourant().add(p);
+	    ((CaseNormale) p.getPos()).setOccupant(p);
+    }
 }
