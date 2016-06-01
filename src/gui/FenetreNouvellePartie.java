@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -13,8 +14,8 @@ import javax.swing.JPanel;
 public class FenetreNouvellePartie extends JDialog
 {
 	
-	String couleur;
-	
+	private String couleur;
+
 	public FenetreNouvellePartie(JFrame princ)
 	{
 		super(princ, "Nouvelle partie", true);
@@ -32,7 +33,6 @@ public class FenetreNouvellePartie extends JDialog
 		JLabel lValeur = new JLabel("Choisissez votre couleur :");
 		lValeur.setBounds(30, 20, 50, 50);	// on place et on dimensionne...
 		panel_haut.add(lValeur);
-		
 		
 		JButton[] boutons = new JButton[4];
 		boutons[0] = new JButton("Jaune");
@@ -61,7 +61,7 @@ public class FenetreNouvellePartie extends JDialog
 		xFenetre = largeurEcran/3;
 		yFenetre = hauteurEcran/3;	// elle est placée à 1/3 du coin haut gauche
 		this.setLocation(xFenetre,yFenetre);
-		this.setSize(450, 150);  
+		this.setSize(450, 150);		
 	}
 
 	private void setCouleur(String string)
@@ -76,6 +76,7 @@ public class FenetreNouvellePartie extends JDialog
 		public void actionPerformed(ActionEvent e)
 		{
 			setCouleur("Jaune");
+			dispose();
 		}
 	}
 	
@@ -85,6 +86,7 @@ public class FenetreNouvellePartie extends JDialog
 		public void actionPerformed(ActionEvent e)
 		{
 			setCouleur("Vert");
+			dispose();
 		}
 	}
 	
@@ -94,6 +96,7 @@ public class FenetreNouvellePartie extends JDialog
 		public void actionPerformed(ActionEvent e)
 		{
 			setCouleur("Bleu");
+			dispose();
 		}
 	}
 	
@@ -103,6 +106,7 @@ public class FenetreNouvellePartie extends JDialog
 		public void actionPerformed(ActionEvent e)
 		{
 			setCouleur("Rouge");
+			dispose();
 		}
 	}
 }
