@@ -6,27 +6,48 @@ import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
-public class Jeu implements Tour{
+public class Jeu implements Tour
+{
 
-	private Joueur[] joueur; //Liste des joueurs
-	private Plateau plateau; //plateau du jeu
-	private int joueurCourant = 0; //le joueur en cour
-	private Hashtable<Integer, String> ht = new Hashtable<Integer, String>(); //la liste des pivots
-	private Hashtable<Integer, String> htInv = new Hashtable<Integer, String>(); //la liste des pivots pour les mouvements de retour
-	
-	public Jeu(Joueur[] j, Plateau p) {
+  // Liste des joueurs
+	private Joueur[] joueur;
+  // Plateau du jeu
+	private Plateau plateau;
+  // Joueur dont c'est le tour de jeu
+	private int joueurCourant;
+  // Liste des pivots pour le deplacement
+	private Hashtable<Integer, String> ht;
+  // Liste des pivots pour les mouvements de retour en arriere
+	private Hashtable<Integer, String> htInv;
+
+	public Jeu(Joueur[] j, Plateau p)
+  {
+    this.joueurCourant = 0;
+    this.ht = new Hashtable<Integer, String>();
+    this.htInv = new Hashtable<Integer, String>()
 		this.setJoueur(j);
 		this.setPlateau(p);
 		this.setHt();
 	}
-	
-	public Hashtable<Integer, String> getHt () {
+
+  /*/////////////////////////////////////////////////////////////////////////////////////////
+            #####                               #     #####
+           #     # ###### #####  ####          #     #     # ###### #####  ####
+           #       #        #   #             #      #       #        #   #
+           #  #### #####    #    ####        #        #####  #####    #    ####
+           #     # #        #        #      #              # #        #        #
+           #     # #        #   #    #     #         #     # #        #   #    #
+            #####  ######   #    ####     #           #####  ######   #    ####
+  *//////////////////////////////////////////////////////////////////////////////////////////
+
+	public Hashtable<Integer, String> getHt ()
+  {
 		return this.ht;
 	}
-	
+
 	private void setHt() {
-		//Lis la liste des pivots stockés dans le fichier "mouvement.txt"
-		//et range les données dans une hashtable
+		// Lis la liste des pivots stockes dans le fichier "mouvement.txt"
+		//et range les donnees dans une hashtable
 		String pos, posX, posY, dir;
 		try {
 			Scanner sc = new Scanner (new FileReader("src/jeu/mouvement.txt"));
@@ -43,10 +64,10 @@ public class Jeu implements Tour{
 			}
 			sc.close();
 		} catch (FileNotFoundException e) {
-			    System.out.println ("Le fichier n'a pas été trouvé");
+			    System.out.println ("Le fichier n'a pas ete trouve");
 			    e.printStackTrace();
 		}
-		
+
 		try {
 			Scanner sc = new Scanner (new FileReader("src/jeu/mouvementInv.txt"));
 			while (sc.hasNextLine())
@@ -62,11 +83,11 @@ public class Jeu implements Tour{
 			}
 			sc.close();
 		} catch (FileNotFoundException e) {
-			    System.out.println ("Le fichier n'a pas été trouvé");
+			    System.out.println ("Le fichier n'a pas ete trouve");
 			    e.printStackTrace();
 		}
 	}
-	
+
 	public Joueur[] getJoueur() {
 		return this.joueur;
 	}
@@ -82,7 +103,7 @@ public class Jeu implements Tour{
 	public int getNumJoueurCourant() {
 		return this.joueurCourant;
 	}
-	
+
 	public Joueur getJoueurCourant() {
 		return this.getJoueur()[this.getNumJoueurCourant()];
 	}
@@ -96,16 +117,26 @@ public class Jeu implements Tour{
 	public void setJoueur(Joueur[] joueur) {
 		this.joueur = joueur;
 	}
-	
+
+  /*/////////////////////////////////////////////////////////////////////////////////////////
+                   #     #
+                   ##   ## ###### ##### #    #  ####  #####  ######  ####
+                   # # # # #        #   #    # #    # #    # #      #
+                   #  #  # #####    #   ###### #    # #    # #####   ####
+                   #     # #        #   #    # #    # #    # #           #
+                   #     # #        #   #    # #    # #    # #      #    #
+                   #     # ######   #   #    #  ####  #####  ######  ####
+  *//////////////////////////////////////////////////////////////////////////////////////////
+
 	@Override
 	public void terminerTour() {
-		//Arrête un tour en cours et donne la main au suivant
+		//Arrï¿½te un tour en cours et donne la main au suivant
 		this.setJoueurCourant(((this.joueurCourant++) % this.getJoueur().length));
 	}
 
 	@Override
 	public int lancerDe() {
-		//Lance un dé dont le résultat sera compris entre
+		//Lance un dï¿½ dont le rï¿½sultat sera compris entre
 		//1 inclus et 7 exclus
 		int min = 1;
 		int max = 6;
@@ -118,14 +149,14 @@ public class Jeu implements Tour{
 		for (int i=0; i<score; i++) {
 			int abs = 0, ord = 0;
 			int hashedKey = p.getPos().getPosition().toString().hashCode();
-			
-			if (inv == 1) 
+
+			if (inv == 1)
 				if (ht.containsKey(hashedKey))
 					p.setDir(ht.get(hashedKey));
-			else //Si on est en déplacement inversé
+			else //Si on est en dï¿½placement inversï¿½
 				if (htInv.containsKey(hashedKey))
 					p.setDir(htInv.get(hashedKey));
-			
+
 			switch (p.getDir()) {
 				case "d" :
 					abs = 1;
@@ -140,85 +171,138 @@ public class Jeu implements Tour{
 					ord = -1;
 					break;
 			}
-			
-			Coordonnees caseSuivant = p.getPos().getPosition(); //Les coordonnées courante de la piece 
+
+      // Les coordonnees courantes de la piece
+			Coordonnees caseSuivant = p.getPos().getPosition();
 			Coordonnees temp = new Coordonnees(caseSuivant);
-			
+
 			temp.setAbscisse(temp.getAbscisse()+abs);
-			temp.setOrdonnee(temp.getOrdonnee()+ord); //Acceder à la case suivante 
-			if ((((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp)).getOccupant() != null)) {
-					if (score - i != 1) {
-						//Si le score est différent de 1 et que 
-						//la case suivante a un occupant, on doit repartir dans l'autre sens
-						inv *= -1; 
+			temp.setOrdonnee(temp.getOrdonnee()+ord); //Acceder a la case suivante
+			if ((((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp)).getOccupant() != null))
+      {
+					if (score - i != 1)
+          {
+						// Si le score est different de 1 et que
+						// la case suivante a un occupant, on doit repartir dans l'autre sens
+						inv *= -1;
 						ord *= -1;
 						abs *= -1;
 						temp.setAbscisse(caseSuivant.getAbscisse()+abs);
-						temp.setOrdonnee(caseSuivant.getOrdonnee()+ord); //Acceder à la case suivante 
-					} else {
-						//sortir la piece (score == 1)
-						//et prendre sa place
+						temp.setOrdonnee(caseSuivant.getOrdonnee()+ord); //Acceder a la case suivante
+					}
+          else
+          {
+						// sortir la piece (score == 1)
+						// et prendre sa place
 						CaseOccupable nvlEmplacement = ((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(temp));
-						try {
-							((Ecurie) nvlEmplacement.getOccupant().getProprietaire().getStock()).sortirCheval(); //Le chavel est retourné dans son écurie
-						} catch (EcurieException e) {} //l'exception ne peut pas se produire puisqu'on ajoute un cheval
-						this.getJoueurCourant().remove(nvlEmplacement.getOccupant());					
+						try
+            {
+              // Le cheval est retourne dans son ecurie
+							((Ecurie) nvlEmplacement.getOccupant().getProprietaire().getStock()).sortirCheval();
+						}
+            // l'exception ne peut pas se produire puisqu'on ajoute un cheval
+            catch (EcurieException e) {}
+
+						this.getJoueurCourant().remove(nvlEmplacement.getOccupant());
 						caseSuivant = nvlEmplacement.getPosition();
 					}
-			} else
+			}
+      else
 				caseSuivant = temp;
-			
-			((CaseOccupable) p.getPos()).setOccupant(null); //La case courante devient vide
-			p.setPos(this.getPlateau().getCaseDepuisCoordonnees(caseSuivant));//La pièce change de case
-			((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(caseSuivant)).setOccupant(p); //La nouvelle case a son occupant
-		}
-	}
-	/*//Générer une position de départ en fonction du joueur en fonction du numéro de joueur courant
-	// 0 = 0,6
-	// 1 = 8,0
-	// 2 = 14,8
-	// 3 = 6,14
-	//ensuite regarder dans la hashtable pour savoir sur quel pivot on démarre
-	Coordonnees c = null;
-	switch (this.getNumJoueurCourant()) {
-		case 0:
-			c = new Coordonnees(0,6);
-			break;
-		case 1 :
-			c = new Coordonnees(8,0);
-			break;
-		case 2 :
-			c = new Coordonnees(14,8);
-			break;
-		case 3 :
-			c = new Coordonnees(6,14);
-			break;
-	}
-	Piece occupantDepart = ((CaseNormale) this.getPlateau().getCaseDepuisCoordonnees(c)).getOccupant();
-	
-	if (occupantDepart == null) {
-		this.ajout (p);
-	} else if (occupantDepart.getProprietaire() != this.getJoueurCourant()) {
-		//Le cheval sur la case de départ retourne à l'écurie
-		this.rentrerPiece(occupantDepart);
-		ajout(p);
-	} else if (occupantDepart.getProprietaire() == this.getJoueurCourant()) 
-		throw new CaseDepartDejaOccupeeException();
-}
 
-public void ajout (Piece p) throws ChevalException, EcurieException {
-	Piece piece = null;
-	for (Piece iterateurPiece : this.getJoueurCourant().getPieces()) {
-		if (iterateurPiece.getNom().equals(p.getNom())) {
-			piece = iterateurPiece;
-			break;
+      // La case courante devient vide
+			((CaseOccupable) p.getPos()).setOccupant(null);
+      // La piece change de case
+			p.setPos(this.getPlateau().getCaseDepuisCoordonnees(caseSuivant));
+      // La nouvelle case a son occupant
+			((CaseOccupable) this.getPlateau().getCaseDepuisCoordonnees(caseSuivant)).setOccupant(p);
 		}
 	}
-	
-	if (p == null) throw new ChevalException("Cheval introuvable");
-	this.getJoueurCourant().getStock().sortirPiece();
-	String nomCheval = "cheval" + (4-((Ecurie) this.getJoueurCourant().getStock()).getDepart());
-	String newDir = ht.get(p.getPos().getPosition().toString().hashCode());
-	this.getJoueurCourant().add(new Piece(this.getJoueurCourant(), nomCheval, piece.getPos(), newDir));
-}*/
+
+  public void sortirCheval()
+  {
+    // La position de depart est fonction du numero du joueur courant
+  	// 0 = 0,6
+  	// 1 = 8,0
+  	// 2 = 14,8
+  	// 3 = 6,14
+  	Coordonnees c = null;
+  	switch (this.getNumJoueurCourant())
+    {
+  		case 0 :
+  			c = new Coordonnees(0,6);
+  			break;
+  		case 1 :
+  			c = new Coordonnees(8,0);
+  			break;
+  		case 2 :
+  			c = new Coordonnees(14,8);
+  			break;
+  		case 3 :
+  			c = new Coordonnees(6,14);
+  			break;
+  	}
+
+    // on cree la piece que l'on va sortir de l'ecurie, on sait que :
+    // - son proprietaire est le joueur courant
+    // - son nom est "cheval" + un numero fonction du nombre de cheval deja dans la liste du joueur
+    // - sa case sera, si la pÃ®ece est ajoutee, la case de depart du joueur
+    //    (sinon elle sera detruite de toute facon)
+    // - les cases de depart des joueurs se trouvant sur des pivots, on recupere la direction
+    //    de la piece directement dans la hashtable
+    Piece p = new Piece(this.getJoueurCourant(),
+                        "cheval" + (this.getJoueurCourant().size() + 1),
+                        this.getPlateau().getCaseDepuisCoordonnees(c),
+                        this.ht.get(c.toString().hashCode());
+
+    // on regarde s'il y a un occupant sur la case de depart du joueur
+  	Piece occupantDepart = ((CaseNormale) this.getPlateau().getCaseDepuisCoordonnees(c)).getOccupant();
+
+    // s'il n'y en a pas
+  	if (occupantDepart == null)
+    {
+      // on peut ajouter la piece au jeu
+  		this.ajout(p);
+    }
+    // sinon s'il y a deja une piece
+    else
+      // et que le proprietaire de cette piece est different
+      // du joueur voulant sortir sa piece de l'ecurie
+      if (occupantDepart.getProprietaire() != this.getJoueurCourant())
+      {
+    		// Le cheval sur la case de depart retourne a son ecurie
+    		this.rentrerPiece(occupantDepart);
+        // puis on peut ajouter la piece du joueur courant au jeu
+    		ajout(p);
+  	  }
+      // sinon si le proprietaire et le joueur courant sont identiques, il y a Exception
+      else
+  		  throw new CaseDepartDejaOccupeeException();
+  }
+
+  // Ajoute une piece au jeu :
+  // - ajoute la piece a liste de pieces du joueur
+  // - ajoute la piece a la case
+  // - modifie l'ecurie du joueur
+  public void ajout(Piece p) throws ChevalException, EcurieException
+  {
+    this.getJoueurCourant().add(p);
+    p.getPos().
+
+    /*
+  	Piece piece = null;
+  	for (Piece iterateurPiece : this.getJoueurCourant().getPieces()) {
+  		if (iterateurPiece.getNom().equals(p.getNom())) {
+  			piece = iterateurPiece;
+  			break;
+  		}
+  	}
+
+  	if (p == null) throw new ChevalException("Cheval introuvable");
+  	this.getJoueurCourant().getStock().sortirPiece();
+  	String nomCheval = "cheval" + (4-((Ecurie) this.getJoueurCourant().getStock()).getDepart());
+  	String newDir = ht.get(p.getPos().getPosition().toString().hashCode());
+  	this.getJoueurCourant().add(new Piece(this.getJoueurCourant(), nomCheval, piece.getPos(), newDir));
+    */
+  }
 }
