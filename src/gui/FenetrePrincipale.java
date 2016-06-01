@@ -184,7 +184,7 @@ public class FenetrePrincipale extends JFrame
 	    JPanel cell8 = new JPanel();
 	    cell8.setBackground(Color.DARK_GRAY);
 	    
-		 //L'objet servant à positionner les composants
+		 //L'objet servant a� positionner les composants
 	    GridBagConstraints gbc = new GridBagConstraints();
 			
 	    //On positionne la case de depart du composant
@@ -291,27 +291,10 @@ public class FenetrePrincipale extends JFrame
 		JMenuItem nouveau = new JMenuItem("Nouveau partie");
 		fichier.add(nouveau);
 		nouveau.addActionListener(new EcouteurNouvellePartie(this));
-		JMenuItem ouvrir = new JMenuItem("Ouvrir");
-		fichier.add(ouvrir);
-		JMenuItem enregistrer = new JMenuItem("Enregistrer");
-		fichier.add(enregistrer);
+		
 		JMenuItem quitter = new JMenuItem("Quitter");
 		fichier.add(quitter);
 		quitter.addActionListener(new EcouteurQuitter());
-		
-		// Menu Edition
-		JMenu edition = new JMenu("Edition");
-		menuBar.add(edition);
-		JMenuItem copier = new JMenuItem("Copier");
-		edition.add(copier);
-		JMenuItem couper = new JMenuItem("Couper");
-		edition.add(couper);
-		JMenuItem coller = new JMenuItem("Coller");
-		edition.add(coller);
-		
-		// Menu Démarrer
-		JMenuItem demarrer = new JMenuItem("Demarrer");
-		menuBar.add(demarrer);
 		
 		this.setJMenuBar(menuBar);
 	}
@@ -353,7 +336,7 @@ public class FenetrePrincipale extends JFrame
 		@Override
 	    public void actionPerformed(ActionEvent e)
 			{
-				// On remet à zéro le champ de saisie
+				// On remet a zero le champ de saisie
 				tfValeur.setText("0");
 	    }
 	}
