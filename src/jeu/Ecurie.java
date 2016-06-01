@@ -7,7 +7,7 @@ public class Ecurie extends Reserve
 	// Nombre de chevaux a avoir fini leur tour de plateau
 	private int arrivee;
 
-	public Ecurie(int n)
+	public Ecurie(int n) throws EcurieException
   {
 		this.setDepart(n);
 		this.setArrivee(0);
@@ -56,12 +56,6 @@ public class Ecurie extends Reserve
                      #     # ######   #   #    #  ####  #####  ######  ####
   *//////////////////////////////////////////////////////////////////////////////////////////
 
-	// Fait revenir un cheval degage par un adversaire a l'ecurie de depart
-	public void sortirCheval() throws EcurieException
-	{
-		this.setDepart(this.depart + 1);
-	}
-
 	// Fait revenir un cheval a l'ecurie d'arrivee apres qu'il ait fini son tour de plateau
 	public void chevalArrivee()
 	{
@@ -76,13 +70,11 @@ public class Ecurie extends Reserve
 		this.setDepart(this.depart - 1);
 	}
 
+  // Faire rentrer une piece dans l'ecurie de depart (degagee par un adversaire)
 	@Override
 	public void rentrerPiece(Piece p)
   {
-		// rentrer une piece dans l'ecurie
-		// dans le jeu en fonction de l'exception attrapee, on fait la fonction qui lui est liee
-		p.getProprietaire().getPieces().remove(p);
-		((CaseNormale) p.getPos()).setOccupant(null);
+		this.setDepart(this.depart + 1);
 	}
 
 }
