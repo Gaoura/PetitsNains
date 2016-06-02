@@ -53,8 +53,7 @@ public class Jeu implements Tour
 		String pos, posX, posY, dir;
 		try {
 			Scanner sc = new Scanner (new FileReader("src/jeu/mouvement.txt"));
-			while (sc.hasNextLine())
-			{
+			while (sc.hasNextLine()) {
 				sc.nextLine();
 				sc.findInLine("(\\w+),(\\w+):(\\w+)");
 				MatchResult result = sc.match();
@@ -72,8 +71,7 @@ public class Jeu implements Tour
 
 		try {
 			Scanner sc = new Scanner (new FileReader("src/jeu/mouvementInv.txt"));
-			while (sc.hasNextLine())
-			{
+			while (sc.hasNextLine()) {
 				sc.nextLine();
 				sc.findInLine("(\\w+),(\\w+):(\\w+)");
 				MatchResult result = sc.match();
@@ -152,13 +150,13 @@ public class Jeu implements Tour
 			int abs = 0, ord = 0;
 			int hashedKey = p.getPos().getPosition().toString().hashCode();
 
-			if (inv == 1)
+			if (inv == 1) {
 				if (ht.containsKey(hashedKey))
 					p.setDir(ht.get(hashedKey));
-			else //Si on est en deplacement inverse
+			} else {//Si on est en deplacement inverse
 				if (htInv.containsKey(hashedKey))
 					p.setDir(htInv.get(hashedKey));
-
+			}
 			switch (p.getDir()) {
 				case "d" :
 					abs = 1;
@@ -245,7 +243,7 @@ public class Jeu implements Tour
 	                        "cheval" + (this.getJoueurCourant().size() + 1),
 	                        this.getPlateau().getCaseDepuisCoordonnees(c),
 	                        this.ht.get(c.toString().hashCode()));
-	
+	    
 	    // on regarde s'il y a un occupant sur la case de depart du joueur
 	  	Piece occupantDepart = ((CaseNormale) this.getPlateau().getCaseDepuisCoordonnees(c)).getOccupant();
 	

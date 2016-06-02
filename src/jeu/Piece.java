@@ -18,9 +18,9 @@ public class Piece {
 	}
 	
 	public void setDir(String dir) {
-		if (!dir.equals("d") || !dir.equals("g") || !dir.equals("h") || !dir.equals("b"))
+		if (!dir.equals("d") && !dir.equals("g") && !dir.equals("h") && !dir.equals("b"))
 			throw new IllegalArgumentException("Direction incorrecte");
-		else this.dir = dir;
+		this.dir = dir;
 	}
 
 	public Joueur getProprietaire() {

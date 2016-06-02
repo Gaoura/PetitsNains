@@ -3,6 +3,7 @@ package gui;
 import jeu.*;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -24,12 +26,19 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class FenetrePrincipale extends JFrame
-{
+public class FenetrePrincipale extends JFrame {
 	
 	private int nbJoueur;
 	private String[] nomsJoueurs;
 	private Jeu jeu = new Jeu();
+	private JPanel panelJeu;
+	private JPanel panelDiscussion;
+	private JLabel lResultatTour;
+	private JPanel panelChoixChevaux;
+	private JPanel panelChoix;
+	private JLabel[] lEcurie;
+	private JLabel res;
+	private int score;
 	
 	public FenetrePrincipale(String titre) {
 		super(titre);
@@ -54,7 +63,7 @@ public class FenetrePrincipale extends JFrame
 		// on fait un tableau de dimensions :
 		// - le nombre de caracteres sur la ligne 0
 		// - le nombre de String dans la liste
-		String[][] ligne = new String[15][15];
+		String[][] ligne = new String[longueur_tab][hauteur_tab];
 		Case[][] cases_plateau = new Case[longueur_tab][hauteur_tab];	
 		
 		for(int i = 0; i < hauteur_tab; i++) {
@@ -64,7 +73,7 @@ public class FenetrePrincipale extends JFrame
 		
 		// creation du jeu en fonction de ce qu'on obtient grace au fichier damier.txt
 		
-		JPanel panelGauche = new JPanel(new GridBagLayout()); //Le pannel qui contiendra le plateau de jeu
+		this.panelJeu = new JPanel(new GridBagLayout()); //Le pannel qui contiendra le plateau de jeu
 		GridBagConstraints c = new GridBagConstraints(); //Position de la case dans le GridBagLayout
 		
 		for(int i = 0; i < hauteur_tab; i++) {
@@ -98,49 +107,114 @@ public class FenetrePrincipale extends JFrame
 					Icon img = new ImageIcon("img/" + nomCase);
 					JLabel picLabel = new JLabel(img);
 					
-					panelGauche.add(picLabel, c);
+					this.panelJeu.add(picLabel, c);
 				}
 			}
 		}
-		
-		
-		
-		
 		initFenetrePrincipale();
 		initMenu();
 		
 		JPanel mainPanel = new JPanel(new GridLayout(1, 2));
 		
-		JPanel panelDroit = new JPanel(); //Le panel d'interaction avec le joueur
+		this.panelDiscussion = new JPanel(); //Le panel d'interaction avec le joueur
 		
-		mainPanel.add(panelGauche);
-		mainPanel.add(panelDroit);
+		mainPanel.add(this.panelJeu);
+		mainPanel.add(this.panelDiscussion);
 		
 		this.add(mainPanel);
 		
 		this.setVisible(true);
 	}
 	
+	public void setResultatTour(String msg) {
+		this.lResultatTour.setText(msg);
+	}
+	
 	public void lancerJeu() {
 		Ecurie[] e = new Ecurie[getNbJoueur()];
+		this.lEcurie = new JLabel[getNbJoueur()];
 		Joueur[] joueurs = new Joueur[getNbJoueur()];
 		for (int i = 0; i < getNbJoueur(); i++) {
+			try {
+				e[i] = new Ecurie(4);
+			} catch (EcurieException e1) { 
+				e1.printStackTrace();
+			}
 			joueurs[i] = new Joueur(getNomsJoueurs()[i], i, e[i]);
+			this.lEcurie[i] = new JLabel("Chevaux au départ : " + e[i].getDepart() + " / Chevaux à l'arrivé : " + e[i].getArrivee());
 		}
 		this.jeu.setJoueur(joueurs);
 		
-		int i = 0;
+		initPanelDiscussion();
 		
-		while (true) {
-			System.out.println(i);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+	}
+	
+	public void initPanelDiscussion() {
+		this.panelDiscussion.setLayout(new GridLayout(3,1));
+		JPanel panelBouton = new JPanel();
+		this.panelDiscussion.add(panelBouton);
+		panelBouton.setLayout(new FlowLayout());
 		
+		JPanel panelEcurie = new JPanel();
+		this.panelDiscussion.add(panelEcurie);
+		panelEcurie.setLayout(new GridLayout(getNbJoueur(), 1));
+		for (int i = 0; i<getNbJoueur(); i++) panelEcurie.add(this.lEcurie[i]);
+		
+		JButton lancer = new JButton("Lancer le dé");
+		lancer.addActionListener(new lancerDe());
+		panelBouton.add(lancer);
+		
+		this.res = new JLabel("Résultat =");
+		panelBouton.add(res);
+		
+		this.panelChoix = new JPanel();
+		this.panelChoix.setLayout(new GridLayout(2,1));
+		this.panelDiscussion.add(this.panelChoix);
+		
+		this.panelChoixChevaux = new JPanel();
+		this.panelChoixChevaux.setLayout(new FlowLayout());
+		this.panelChoix.add(this.panelChoixChevaux);
+		
+		JPanel panelResultatTour = new JPanel();
+		this.lResultatTour = new JLabel();
+		panelResultatTour.add(this.lResultatTour);
+		panelResultatTour.setLayout(new FlowLayout());
+		this.panelChoix.add(panelResultatTour);
+		this.lResultatTour.setText("Veuillez lancer le dé");
+		
+		this.panelDiscussion.validate();
+	}
+	
+	public String getLEcurie(int i) {
+		return lEcurie[i].getText();
+	}
+
+	public void setLEcurie(int i, String str) {
+		this.lEcurie[i].setText(str);
+	}
+
+	public String getResDe() {
+		return res.getText();
+	}
+
+	public void setResDe(String str) {
+		this.res.setText(str);
+	}
+	
+	public String getResTour() {
+		return lResultatTour.getText();
+	}
+
+	public void setResTour(String str) {
+		this.lResultatTour.setText(str);
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 	public Jeu getJeu() {
@@ -167,7 +241,7 @@ public class FenetrePrincipale extends JFrame
 		return nomsJoueurs;
 	}
 
-	public void setNomsJoueurs(String[] nomsJoueurs) {
+	private void setNomsJoueurs(String[] nomsJoueurs) {
 		this.nomsJoueurs = nomsJoueurs;
 	}
 	
@@ -187,8 +261,7 @@ public class FenetrePrincipale extends JFrame
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	private void initMenu()
-	{
+	private void initMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		
 		// Menu Fichier
@@ -205,11 +278,13 @@ public class FenetrePrincipale extends JFrame
 		this.setJMenuBar(menuBar);
 	}
 	
-	class EcouteurQuitter implements ActionListener
-	{
+	public void demanderDeplacement() {
+		
+	}
+	
+	class EcouteurQuitter implements ActionListener {
 		@Override
-	    public void actionPerformed(ActionEvent e)
-		{
+	    public void actionPerformed(ActionEvent e) {
 			System.exit(0);
 	    }
 	}
@@ -222,10 +297,45 @@ public class FenetrePrincipale extends JFrame
 			JDialogNouveauJoueur d1 = new JDialogNouveauJoueur("nbJoueur");
 			setNbJoueur(d1.getNbJoueur()); //Récupèration du nombre de joueurs
 			initNomsJoueurs(getNbJoueur()); //Instanciation du tableau de noms de joueurs
-			setNomsJoueurs(d1.getNomJoueurs()); //Remplissage du tableau de noms de joueurs
-			//getJeu().setJoueurCourant(d1.getPremierJoueur());
+			setNomsJoueurs(d1.getNomJoueurs()); //Remplissage du tableau de noms de joueurs 
 			
 			lancerJeu();
+		}
+	}
+	
+	class lancerDe implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			setScore(jeu.lancerDe());
+			setResDe("Résultat = " + getScore());
+			setResultatTour("C'est au tour de " + getJeu().getJoueurCourant().getNomJoueur() + " de jouer.");
+
+			if (getScore() == 6) {
+				try {
+					getJeu().sortirPiece();
+					setResTour("Le cheval " + (getJeu().getJoueurCourant().size()) + " est placé à la case de départ");
+					setLEcurie(getJeu().getNumJoueurCourant(), 
+							"Chevaux au départ : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getDepart() + 
+							" / Chevaux à l'arrivé : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getArrivee());
+				} catch (CaseDepartDejaOccupeeException e1) {
+					// Impossible de sortir une pièce, le joueur a déjà un cheval sur la case de sortie
+					setResTour("Impossible de sortir le cheval : la case de départ est déjà occupée");
+				} catch (ChevalException e1) {
+					//Impossible de trouver le cheval
+					demanderDeplacement();
+					e1.printStackTrace();
+				} catch (EcurieException e1) {
+					//Plus de cheval au départ
+					System.out.println("Ecurie vide");
+				}
+			} else {
+				if (getJeu().getJoueurCourant().size() == 0) {
+					getJeu().terminerTour(); //le joueur n'a pas de pièce sur le terrain
+				} else { //le joueur a au moins une piece sur le terrain
+					//déplacement
+					getJeu().terminerTour();
+				}
+			}
 		}
 	}
 }
