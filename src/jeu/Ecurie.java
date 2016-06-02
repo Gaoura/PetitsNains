@@ -57,9 +57,7 @@ public class Ecurie extends Reserve {
 
 	// Sortir une piece de l'ecurie
 	@Override
-	public void sortirPiece(Piece p) throws EcurieException
-	{
-
+	public void sortirPiece() throws EcurieException {
 		this.setDepart(this.depart - 1);
 	}
 

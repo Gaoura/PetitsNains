@@ -43,8 +43,7 @@ public class Jeu implements Tour
             #####  ######   #    ####     #           #####  ######   #    ####
   *//////////////////////////////////////////////////////////////////////////////////////////
 
-	public Hashtable<Integer, String> getHt ()
-  {
+	public Hashtable<Integer, String> getHt () {
 		return this.ht;
 	}
 
@@ -294,7 +293,7 @@ public class Jeu implements Tour
 	      throw new ChevalException("Cheval introuvable");
 	
 	    // on modifie l'ecurie en premier pour verifier que l'on a aucun probleme avec cet ajout
-	    this.getJoueurCourant().getStock().sortirPiece(p);
+	    this.getJoueurCourant().getStock().sortirPiece();
 	    this.getJoueurCourant().add(p);
 	    ((CaseNormale) p.getPos()).setOccupant(p);
     }
