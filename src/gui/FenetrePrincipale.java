@@ -126,10 +126,6 @@ public class FenetrePrincipale extends JFrame {
 		this.setVisible(true);
 	}
 	
-	public void setResultatTour(String msg) {
-		this.lResultatTour.setText(msg);
-	}
-	
 	public void lancerJeu() {
 		Ecurie[] e = new Ecurie[getNbJoueur()];
 		this.lEcurie = new JLabel[getNbJoueur()];
@@ -172,7 +168,7 @@ public class FenetrePrincipale extends JFrame {
 		this.panelDiscussion.add(this.panelChoix);
 		
 		this.panelChoixChevaux = new JPanel();
-		this.panelChoixChevaux.setLayout(new FlowLayout());
+		this.panelChoixChevaux.setLayout(new GridLayout(2,1));
 		this.panelChoix.add(this.panelChoixChevaux);
 		
 		JPanel panelResultatTour = new JPanel();
@@ -246,7 +242,7 @@ public class FenetrePrincipale extends JFrame {
 	}
 	
 	private void initFenetrePrincipale() {
-		Toolkit tk = Toolkit.getDefaultToolkit();    
+		/*Toolkit tk = Toolkit.getDefaultToolkit();    
 		Dimension d = tk.getScreenSize();
 		int hauteurEcran, largeurEcran, hauteurFenetre,	largeurFenetre,	xFenetre,	yFenetre;    
 		hauteurEcran = d.height;	// on recupere la hauteur de l'ecran
@@ -254,9 +250,9 @@ public class FenetrePrincipale extends JFrame {
 		hauteurFenetre = hauteurEcran/2;
 		largeurFenetre = largeurEcran/2;	// la fenetre prend 1/4 de l'ecran
 		xFenetre    =    largeurEcran/3;
-		yFenetre    =    hauteurEcran/3;	// elle est placee a  1/3 du coin haut gauche
-		this.setLocation(xFenetre,yFenetre); 
-		this.setSize(largeurFenetre, hauteurFenetre);
+		yFenetre    =    hauteurEcran/3;	// elle est placee a  1/3 du coin haut gauche*/
+		this.setLocation(0,0); 
+		this.setSize(1600, 900);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -279,7 +275,48 @@ public class FenetrePrincipale extends JFrame {
 	}
 	
 	public void demanderDeplacement() {
+		this.panelChoixChevaux.removeAll();
+		this.panelChoixChevaux.repaint();
 		
+		if (getJeu().getJoueurCourant().size() == 0) { //le joueur n'a pas de pièces sur le plateau
+			if (getScore() != 6) { //tant que ça n'est pas un 6 il doit passer son tour
+				getJeu().terminerTour();
+			} else { //C'est un 6
+				JPanel interaction = new JPanel();
+				interaction.setLayout(new GridLayout(2,1));
+				
+				JPanel choixChevaux = new JPanel();
+				choixChevaux.setLayout(new FlowLayout());
+				 
+				JPanel sortirCheval = new JPanel();
+				JButton bQuestionSortirCheval = new JButton("Sortir un cheval de l'écurie ?");
+				bQuestionSortirCheval.addActionListener(new EcouteurSortirCheval());
+				sortirCheval.add(bQuestionSortirCheval);
+				 
+				interaction.add(sortirCheval);
+				interaction.add(choixChevaux);
+				
+				this.panelChoixChevaux.add(interaction);
+				this.panelChoixChevaux.validate();
+			}
+		} else { //le joueur peut faire déplacer des pièces
+			if (getScore() == 6) { //le joueur a pas fait 6 : il peux déplacer les chevaux qu'il a sa disposition ou alors sortir un cheval
+				int nbChevauxJoueurCourant = getJeu().getJoueurCourant().size();
+				JButton[] listeBoutonChevaux = new JButton[nbChevauxJoueurCourant];
+				for (int i = 0; i < nbChevauxJoueurCourant; i++) {
+					listeBoutonChevaux[i] = new JButton("" + i+1);
+					listeBoutonChevaux[i].addActionListener(new EcouteurDeplacerPiece());
+				}
+			}
+			getJeu().terminerTour();
+		}
+	}
+	
+	class EcouteurDeplacerPiece implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}
 	}
 	
 	class EcouteurQuitter implements ActionListener {
@@ -308,34 +345,32 @@ public class FenetrePrincipale extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			setScore(jeu.lancerDe());
 			setResDe("Résultat = " + getScore());
-			setResultatTour("C'est au tour de " + getJeu().getJoueurCourant().getNomJoueur() + " de jouer.");
-
-			if (getScore() == 6) {
-				try {
-					getJeu().sortirPiece();
-					setResTour("Le cheval " + (getJeu().getJoueurCourant().size()) + " est placé à la case de départ");
-					setLEcurie(getJeu().getNumJoueurCourant(), 
-							"Chevaux au départ : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getDepart() + 
-							" / Chevaux à l'arrivé : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getArrivee());
-				} catch (CaseDepartDejaOccupeeException e1) {
-					// Impossible de sortir une pièce, le joueur a déjà un cheval sur la case de sortie
-					setResTour("Impossible de sortir le cheval : la case de départ est déjà occupée");
-				} catch (ChevalException e1) {
-					//Impossible de trouver le cheval
-					demanderDeplacement();
-					e1.printStackTrace();
-				} catch (EcurieException e1) {
-					//Plus de cheval au départ
-					System.out.println("Ecurie vide");
-				}
-			} else {
-				if (getJeu().getJoueurCourant().size() == 0) {
-					getJeu().terminerTour(); //le joueur n'a pas de pièce sur le terrain
-				} else { //le joueur a au moins une piece sur le terrain
-					//déplacement
-					getJeu().terminerTour();
-				}
+			setResTour(getJeu().getJoueurCourant().getNomJoueur() + " a fait " + getScore());
+			demanderDeplacement();
+		}
+	}
+	
+	class EcouteurSortirCheval implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				getJeu().sortirPiece();
+				setResTour("Le cheval " + (getJeu().getJoueurCourant().size()) + " est placé à la case de départ");
+				setLEcurie(getJeu().getNumJoueurCourant(), 
+						"Chevaux au départ : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getDepart() + 
+						" / Chevaux à l'arrivé : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getArrivee());
+			} catch (CaseDepartDejaOccupeeException e1) {
+				// Impossible de sortir une pièce, le joueur a déjà un cheval sur la case de sortie
+				setResTour("Impossible de sortir le cheval : la case de départ est déjà occupée");
+			} catch (ChevalException e1) {
+				//Impossible de trouver le cheval
+				e1.printStackTrace();
+			} catch (EcurieException e1) {
+				//Plus de cheval au départ
+				setResTour("L'écurie de " + (getJeu().getJoueurCourant().getNomJoueur()) + " est vide");
 			}
+			setResTour("Rejouez");
+			demanderDeplacement();
 		}
 	}
 }
