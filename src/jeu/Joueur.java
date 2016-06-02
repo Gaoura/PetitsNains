@@ -12,6 +12,7 @@ public class Joueur {
 		this.setNomJoueur(nom);
 		this.setNumeroJoueur(num);
 		this.setStock(e);
+		this.pieces = new ArrayList<Piece>();
 	}
 	
 	public Reserve getStock() {
