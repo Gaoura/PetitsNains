@@ -16,16 +16,15 @@ public class Jeu implements Tour
   // Joueur dont c'est le tour de jeu
 	private int joueurCourant;
   // Liste des pivots pour le deplacement
-	private Hashtable<Integer, String> ht;
+	private Hashtable<Integer, String> ht = new Hashtable<Integer, String>();
   // Liste des pivots pour les mouvements de retour en arriere
-	private Hashtable<Integer, String> htInv;
+	private Hashtable<Integer, String> htInv = new Hashtable<Integer, String>();
 
 	public Jeu() {
 		this.setHt();
 	}
 
-	public Jeu(Joueur[] j, Plateau p)
-  {
+	public Jeu(Joueur[] j, Plateau p) {
     this.joueurCourant = 0;
     this.ht = new Hashtable<Integer, String>();
     this.htInv = new Hashtable<Integer, String>();
@@ -134,14 +133,14 @@ public class Jeu implements Tour
 
 	@Override
 	public void terminerTour() {
-		//Arr�te un tour en cours et donne la main au suivant
-		this.setJoueurCourant(((this.joueurCourant++) % this.getJoueur().length));
+		//Arrete un tour en cours et donne la main au suivant
+		this.setJoueurCourant(((this.joueurCourant+1) % this.getJoueur().length));
 	}
 
 	@Override
 	public int lancerDe() {
-		//Lance un d� dont le r�sultat sera compris entre
-		//1 inclus et 7 exclus
+		//Lance un de dont le resultat sera compris entre
+		//1 inclus et 6 inclus
 		int min = 1;
 		int max = 6;
 		return min + (int)(Math.random() * ((max - min) + 1));
