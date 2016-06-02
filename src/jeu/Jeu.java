@@ -237,7 +237,7 @@ public class Jeu implements Tour
 	    // on cree la piece que l'on va sortir de l'ecurie, on sait que :
 	    // - son proprietaire est le joueur courant
 	    // - son nom est "cheval" + un numero fonction du nombre de cheval deja dans la liste du joueur
-	    // - sa case sera, si la pîece est ajoutee, la case de depart du joueur
+	    // - sa case sera, si la piece est ajoutee, la case de depart du joueur
 	    //    (sinon elle sera detruite de toute facon)
 	    // - les cases de depart des joueurs se trouvant sur des pivots, on recupere la direction
 	    //    de la piece directement dans la hashtable
