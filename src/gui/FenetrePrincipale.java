@@ -129,6 +129,18 @@ public class FenetrePrincipale extends JFrame
 		}
 		this.jeu.setJoueur(joueurs);
 		
+		int i = 0;
+		
+		while (true) {
+			System.out.println(i);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
 	}
 
 	public Jeu getJeu() {
