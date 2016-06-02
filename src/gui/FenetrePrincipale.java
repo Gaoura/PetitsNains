@@ -53,7 +53,7 @@ public class FenetrePrincipale extends JFrame {
 			
 			sc.close();
 		} catch (FileNotFoundException e) {
-			    System.out.println ("Le fichier n'a pas été trouvé");
+			    System.out.println ("Le fichier n'a pas ete trouve");
 			    e.printStackTrace();
 		}
 		
@@ -81,19 +81,19 @@ public class FenetrePrincipale extends JFrame {
 				if (ligne[i][j].equals("V")) {
 					cases_plateau[i][j] = null;
 				} else {
-					//on récupère le nom, on ajoute.png et on ouvre le fichier
-					//cas spécial : si le nom commence par "marche"
-					//extraire le numéro de la marche 
+					//on rï¿½cupï¿½re le nom, on ajoute.png et on ouvre le fichier
+					//cas spï¿½cial : si le nom commence par "marche"
+					//extraire le numï¿½ro de la marche 
 					c.gridx = j;
 					c.gridy = i;
 					c.gridheight = 1;
 					c.gridwidth = 1;
 					String nomCase = ligne[i][j];
 					
-					if(nomCase.contains("marche")) { //Une marche a été trouvée
-						int num = Integer.parseInt(nomCase.substring(nomCase.length()-1)); //extraction du numéro de la marche (c'est toujours le dernier caractère)
+					if(nomCase.contains("marche")) { //Une marche a ï¿½tï¿½ trouvï¿½e
+						int num = Integer.parseInt(nomCase.substring(nomCase.length()-1)); //extraction du numï¿½ro de la marche (c'est toujours le dernier caractï¿½re)
 						cases_plateau[i][j] = new CaseMarche(new Coordonnees(i, j), num);
-					} else if (nomCase.contains("ecurie")) { //Une écurie se trouve ici
+					} else if (nomCase.contains("ecurie")) { //Une ï¿½curie se trouve ici
 						c.gridheight = 6;
 						c.gridwidth = 6;
 					} else { //C'est une case normale
@@ -137,7 +137,7 @@ public class FenetrePrincipale extends JFrame {
 				e1.printStackTrace();
 			}
 			joueurs[i] = new Joueur(getNomsJoueurs()[i], i, e[i]);
-			this.lEcurie[i] = new JLabel("Chevaux au départ : " + e[i].getDepart() + " / Chevaux à l'arrivé : " + e[i].getArrivee());
+			this.lEcurie[i] = new JLabel("Chevaux au depart : " + e[i].getDepart() + " / Chevaux a l'arrivee : " + e[i].getArrivee());
 		}
 		this.jeu.setJoueur(joueurs);
 		
@@ -156,11 +156,11 @@ public class FenetrePrincipale extends JFrame {
 		panelEcurie.setLayout(new GridLayout(getNbJoueur(), 1));
 		for (int i = 0; i<getNbJoueur(); i++) panelEcurie.add(this.lEcurie[i]);
 		
-		JButton lancer = new JButton("Lancer le dé");
+		JButton lancer = new JButton("Lancer le de");
 		lancer.addActionListener(new lancerDe());
 		panelBouton.add(lancer);
 		
-		this.res = new JLabel("Résultat =");
+		this.res = new JLabel("Resultat =");
 		panelBouton.add(res);
 		
 		this.panelChoix = new JPanel();
@@ -176,7 +176,7 @@ public class FenetrePrincipale extends JFrame {
 		panelResultatTour.add(this.lResultatTour);
 		panelResultatTour.setLayout(new FlowLayout());
 		this.panelChoix.add(panelResultatTour);
-		this.lResultatTour.setText("Veuillez lancer le dé");
+		this.lResultatTour.setText("Veuillez lancer le de");
 		
 		this.panelDiscussion.validate();
 	}
@@ -250,7 +250,7 @@ public class FenetrePrincipale extends JFrame {
 		hauteurFenetre = hauteurEcran/2;
 		largeurFenetre = largeurEcran/2;	// la fenetre prend 1/4 de l'ecran
 		xFenetre    =    largeurEcran/3;
-		yFenetre    =    hauteurEcran/3;	// elle est placee a  1/3 du coin haut gauche*/
+		yFenetre    =    hauteurEcran/3;	// elle est placee aï¿½ 1/3 du coin haut gauche*/
 		this.setLocation(0,0); 
 		this.setSize(1600, 900);
 		
@@ -278,8 +278,8 @@ public class FenetrePrincipale extends JFrame {
 		this.panelChoixChevaux.removeAll();
 		this.panelChoixChevaux.repaint();
 		
-		if (getJeu().getJoueurCourant().size() == 0) { //le joueur n'a pas de pièces sur le plateau
-			if (getScore() != 6) { //tant que ça n'est pas un 6 il doit passer son tour
+		if (getJeu().getJoueurCourant().size() == 0) { //le joueur n'a pas de piï¿½ces sur le plateau
+			if (getScore() != 6) { //tant que ï¿½a n'est pas un 6 il doit passer son tour
 				getJeu().terminerTour();
 			} else { //C'est un 6
 				JPanel interaction = new JPanel();
@@ -289,7 +289,7 @@ public class FenetrePrincipale extends JFrame {
 				choixChevaux.setLayout(new FlowLayout());
 				 
 				JPanel sortirCheval = new JPanel();
-				JButton bQuestionSortirCheval = new JButton("Sortir un cheval de l'écurie ?");
+				JButton bQuestionSortirCheval = new JButton("Sortir un cheval de l'ecurie ?");
 				bQuestionSortirCheval.addActionListener(new EcouteurSortirCheval());
 				sortirCheval.add(bQuestionSortirCheval);
 				 
@@ -299,8 +299,8 @@ public class FenetrePrincipale extends JFrame {
 				this.panelChoixChevaux.add(interaction);
 				this.panelChoixChevaux.validate();
 			}
-		} else { //le joueur peut faire déplacer des pièces
-			if (getScore() == 6) { //le joueur a pas fait 6 : il peux déplacer les chevaux qu'il a sa disposition ou alors sortir un cheval
+		} else { //le joueur peut faire dï¿½placer des piï¿½ces
+			if (getScore() == 6) { //le joueur a pas fait 6 : il peux dï¿½placer les chevaux qu'il a sa disposition ou alors sortir un cheval
 				int nbChevauxJoueurCourant = getJeu().getJoueurCourant().size();
 				JButton[] listeBoutonChevaux = new JButton[nbChevauxJoueurCourant];
 				for (int i = 0; i < nbChevauxJoueurCourant; i++) {
@@ -330,9 +330,9 @@ public class FenetrePrincipale extends JFrame {
 	{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//Dialogue de récupération des informations
+			//Dialogue de rï¿½cupï¿½ration des informations
 			JDialogNouveauJoueur d1 = new JDialogNouveauJoueur("nbJoueur");
-			setNbJoueur(d1.getNbJoueur()); //Récupèration du nombre de joueurs
+			setNbJoueur(d1.getNbJoueur()); //Rï¿½cupï¿½ration du nombre de joueurs
 			initNomsJoueurs(getNbJoueur()); //Instanciation du tableau de noms de joueurs
 			setNomsJoueurs(d1.getNomJoueurs()); //Remplissage du tableau de noms de joueurs 
 			
@@ -344,7 +344,7 @@ public class FenetrePrincipale extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setScore(jeu.lancerDe());
-			setResDe("Résultat = " + getScore());
+			setResDe("Resultat = " + getScore());
 			setResTour(getJeu().getJoueurCourant().getNomJoueur() + " a fait " + getScore());
 			demanderDeplacement();
 		}
@@ -355,19 +355,19 @@ public class FenetrePrincipale extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				getJeu().sortirPiece();
-				setResTour("Le cheval " + (getJeu().getJoueurCourant().size()) + " est placé à la case de départ");
+				setResTour("Le cheval " + (getJeu().getJoueurCourant().size()) + " est place a la case de depart");
 				setLEcurie(getJeu().getNumJoueurCourant(), 
-						"Chevaux au départ : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getDepart() + 
-						" / Chevaux à l'arrivé : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getArrivee());
+						"Chevaux au depart : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getDepart() + 
+						" / Chevaux a l'arrivee : " + ((Ecurie) getJeu().getJoueurCourant().getStock()).getArrivee());
 			} catch (CaseDepartDejaOccupeeException e1) {
-				// Impossible de sortir une pièce, le joueur a déjà un cheval sur la case de sortie
-				setResTour("Impossible de sortir le cheval : la case de départ est déjà occupée");
+				// Impossible de sortir une piï¿½ce, le joueur a dï¿½jï¿½ un cheval sur la case de sortie
+				setResTour("Impossible de sortir le cheval : la case de depart est deja occupee");
 			} catch (ChevalException e1) {
 				//Impossible de trouver le cheval
 				e1.printStackTrace();
 			} catch (EcurieException e1) {
-				//Plus de cheval au départ
-				setResTour("L'écurie de " + (getJeu().getJoueurCourant().getNomJoueur()) + " est vide");
+				//Plus de cheval au dï¿½part
+				setResTour("L'ecurie de " + (getJeu().getJoueurCourant().getNomJoueur()) + " est vide");
 			}
 			setResTour("Rejouez");
 			demanderDeplacement();
