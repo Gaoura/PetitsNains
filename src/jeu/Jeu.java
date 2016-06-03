@@ -107,6 +107,15 @@ public class Jeu implements Tour
 	public Joueur getJoueurCourant() {
 		return this.getJoueur()[this.getNumJoueurCourant()];
 	}
+	
+	public Joueur getJoueurPrecedent()
+	{
+		int i = this.joueurCourant - 1;
+		if (i < 0)
+			i = this.joueur.length - 1;
+		
+		return this.joueur[i];
+	}
 
 	public void setJoueurCourant(int numJoueur) {
 		if (numJoueur < 0 || numJoueur >= this.getJoueur().length)
@@ -165,10 +174,10 @@ public class Jeu implements Tour
 					abs = -1;
 					break;
 				case "h" :
-					ord = 1;
+					ord = -1;
 					break;
 				case "b" :
-					ord = -1;
+					ord = 1;
 					break;
 			}
 

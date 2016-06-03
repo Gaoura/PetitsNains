@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,6 +40,8 @@ public class FenetrePrincipale extends JFrame {
 	private JLabel[] lEcurie;
 	private JLabel res;
 	private int score;
+	private Image cheval_j1 = getToolkit().getImage("img/cheval_j1.png");
+	private Image cheval_j2 = getToolkit().getImage("img/cheval_j2.png");
 	
 	public FenetrePrincipale(String titre) {
 		super(titre);
@@ -263,7 +266,7 @@ public class FenetrePrincipale extends JFrame {
 		// Menu Fichier
 		JMenu fichier = new JMenu("Fichier");
 		menuBar.add(fichier);
-		JMenuItem nouveau = new JMenuItem("Nouveau partie");
+		JMenuItem nouveau = new JMenuItem("Nouvelle partie");
 		fichier.add(nouveau);
 		nouveau.addActionListener(new EcouteurNouvellePartie());
 		
@@ -278,44 +281,63 @@ public class FenetrePrincipale extends JFrame {
 		this.panelChoixChevaux.removeAll();
 		this.panelChoixChevaux.repaint();
 		
-		if (getJeu().getJoueurCourant().size() == 0) { //le joueur n'a pas de pi�ces sur le plateau
-			if (getScore() != 6) { //tant que �a n'est pas un 6 il doit passer son tour
-				getJeu().terminerTour();
-			} else { //C'est un 6
-				JPanel interaction = new JPanel();
-				interaction.setLayout(new GridLayout(2,1));
-				
-				JPanel choixChevaux = new JPanel();
-				choixChevaux.setLayout(new FlowLayout());
-				 
+		if (getJeu().getJoueurCourant().size() == 0) { //le joueur n'a pas de pieces sur le plateau
+			// tant que ce n'est pas un 6 il doit passer son tour
+			// si c'est un 6 il peut sortir un cheval
+			if (getScore() == 6)
+			{ 
 				JPanel sortirCheval = new JPanel();
 				JButton bQuestionSortirCheval = new JButton("Sortir un cheval de l'ecurie ?");
 				bQuestionSortirCheval.addActionListener(new EcouteurSortirCheval());
 				sortirCheval.add(bQuestionSortirCheval);
-				 
-				interaction.add(sortirCheval);
-				interaction.add(choixChevaux);
 				
-				this.panelChoixChevaux.add(interaction);
+				this.panelChoixChevaux.add(sortirCheval);
 				this.panelChoixChevaux.validate();
 			}
-		} else { //le joueur peut faire d�placer des pi�ces
-			if (getScore() == 6) { //le joueur a pas fait 6 : il peux d�placer les chevaux qu'il a sa disposition ou alors sortir un cheval
-				int nbChevauxJoueurCourant = getJeu().getJoueurCourant().size();
-				JButton[] listeBoutonChevaux = new JButton[nbChevauxJoueurCourant];
-				for (int i = 0; i < nbChevauxJoueurCourant; i++) {
-					listeBoutonChevaux[i] = new JButton("" + i+1);
-					listeBoutonChevaux[i].addActionListener(new EcouteurDeplacerPiece());
-				}
+		}
+		else
+		{ // le joueur peut faire deplacer des pieces
+			// on cree un panel pour recevoir le ou les panels contenant les possibilites du joueur
+			JPanel interaction = new JPanel();
+			interaction.setLayout(new GridLayout(2,1));
+			// on cree un panel pour recevoir les boutons des differents chevaux du joueur
+			JPanel choixChevaux = new JPanel();
+			choixChevaux.setLayout(new FlowLayout());
+			
+			// si le joueur obtient un 6, il peut egalement sortir un nouveau cheval de l'ecurie
+			if (getScore() == 6)
+			{ 
+				JPanel sortirCheval = new JPanel();
+				JButton bQuestionSortirCheval = new JButton("Sortir un cheval de l'ecurie ?");
+				bQuestionSortirCheval.addActionListener(new EcouteurSortirCheval());
+				sortirCheval.add(bQuestionSortirCheval);
+				interaction.add(sortirCheval);
 			}
-			getJeu().terminerTour();
+			
+			int nbChevauxJoueurCourant = getJeu().getJoueurCourant().size();
+			JButton[] listeBoutonChevaux = new JButton[nbChevauxJoueurCourant];
+			for (int i = 0; i < nbChevauxJoueurCourant; i++)
+			{
+				listeBoutonChevaux[i] = new JButton(getJeu().getJoueurCourant().get(i).getNom());
+				listeBoutonChevaux[i].addActionListener(new EcouteurDeplacerPiece());
+				choixChevaux.add(listeBoutonChevaux[i]);
+				interaction.add(choixChevaux);
+			}
+			this.panelChoixChevaux.add(interaction);
+			this.panelChoixChevaux.validate();
 		}
 	}
 	
 	class EcouteurDeplacerPiece implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			Object o = e.getSource();
+			JButton b = null;
+			if (o instanceof JButton) b = (JButton) o;
+			// on recupere le numero du cheval a deplacer via le numero en fin de nom du cheval ("cheval1", "cheval2"...)
+			int num = Integer.parseInt(b.getText().charAt(b.getText().length()-1) + "");
+			getJeu().deplacerPiece(getJeu().getJoueurPrecedent().get(num-1), getScore());
+			getJeu().terminerTour();
 		}
 	}
 	
@@ -371,6 +393,7 @@ public class FenetrePrincipale extends JFrame {
 			}
 			setResTour("Rejouez");
 			demanderDeplacement();
+			getJeu().terminerTour();
 		}
 	}
 }
