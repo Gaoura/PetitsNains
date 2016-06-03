@@ -36,12 +36,14 @@ public class FenetrePrincipale extends JFrame {
 	private JPanel panelDiscussion;
 	private JLabel lResultatTour;
 	private JPanel panelChoixChevaux;
+	private JPanel panelBouton;
 	private JPanel panelChoix;
 	private JLabel[] lEcurie;
 	private JLabel res;
 	private int score;
 	private Image cheval_j1 = getToolkit().getImage("img/cheval_j1.png");
 	private Image cheval_j2 = getToolkit().getImage("img/cheval_j2.png");
+	private boolean partieEnCours = false;
 	
 	public FenetrePrincipale(String titre) {
 		super(titre);
@@ -150,9 +152,9 @@ public class FenetrePrincipale extends JFrame {
 	
 	public void initPanelDiscussion() {
 		this.panelDiscussion.setLayout(new GridLayout(3,1));
-		JPanel panelBouton = new JPanel();
-		this.panelDiscussion.add(panelBouton);
-		panelBouton.setLayout(new FlowLayout());
+		this.panelBouton = new JPanel();
+		this.panelDiscussion.add(this.panelBouton);
+		this.panelBouton.setLayout(new FlowLayout());
 		
 		JPanel panelEcurie = new JPanel();
 		this.panelDiscussion.add(panelEcurie);
@@ -161,10 +163,10 @@ public class FenetrePrincipale extends JFrame {
 		
 		JButton lancer = new JButton("Lancer le de");
 		lancer.addActionListener(new lancerDe());
-		panelBouton.add(lancer);
+		this.panelBouton.add(lancer);
 		
 		this.res = new JLabel("Resultat =");
-		panelBouton.add(res);
+		this.panelBouton.add(res);
 		
 		this.panelChoix = new JPanel();
 		this.panelChoix.setLayout(new GridLayout(2,1));
@@ -326,8 +328,59 @@ public class FenetrePrincipale extends JFrame {
 			this.panelChoixChevaux.add(interaction);
 			this.panelChoixChevaux.validate();
 		}
+		
+		/*Construction de l'affichage du cheval
+		 * On scan tout le plateau(getJeu().getPlateau())
+		 * Quand on rencontre une piece, on récupère ses coordonnées dans un GridBagConstraint
+		 * Ensuite on accède à la case grace au champ this.panelJeu
+		 * On créé un nouveau JLabel contenant une imageIcon du cheval (construire le nom du cheval)
+		 * et finalement this.panelJeu().validate() et this.panelJeu().repaint();
+		 */
+		
 	}
 	
+	public JPanel getPanelJeu() {
+		return panelJeu;
+	}
+
+	public JLabel getlResultatTour() {
+		return lResultatTour;
+	}
+
+	public JPanel getPanelChoixChevaux() {
+		return panelChoixChevaux;
+	}
+
+	public JPanel getPanelChoix() {
+		return panelChoix;
+	}
+	
+	public JPanel getPanelBouton() {
+		return this.panelBouton;
+	}
+
+	public JLabel[] getlEcurie() {
+		return lEcurie;
+	}
+	
+	public void setPartieEnCours(boolean b) {
+		this.partieEnCours = b;
+	}
+	
+	public void viderPanel() {
+		getPanelBouton().removeAll();
+		getPanelBouton().repaint();
+		getlResultatTour().removeAll();
+		getlResultatTour().repaint();
+		getlResultatTour().removeAll();
+		getlResultatTour().repaint();
+		getPanelChoixChevaux().removeAll();
+		getPanelChoixChevaux().repaint();
+		getPanelChoix().removeAll();
+		getPanelChoix().repaint();
+		for (int i =0; i<getNbJoueur();i++) getlEcurie()[i].setText("");
+	}
+
 	class EcouteurDeplacerPiece implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -354,10 +407,12 @@ public class FenetrePrincipale extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			//Dialogue de rï¿½cupï¿½ration des informations
 			JDialogNouveauJoueur d1 = new JDialogNouveauJoueur("nbJoueur");
+			if (partieEnCours) viderPanel();
+			
 			setNbJoueur(d1.getNbJoueur()); //Rï¿½cupï¿½ration du nombre de joueurs
 			initNomsJoueurs(getNbJoueur()); //Instanciation du tableau de noms de joueurs
 			setNomsJoueurs(d1.getNomJoueurs()); //Remplissage du tableau de noms de joueurs 
-			
+			setPartieEnCours(true);
 			lancerJeu();
 		}
 	}
