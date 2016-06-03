@@ -296,6 +296,7 @@ public class FenetrePrincipale extends JFrame {
 				this.panelChoixChevaux.add(sortirCheval);
 				this.panelChoixChevaux.validate();
 			}
+			getJeu().terminerTour();
 		}
 		else
 		{ // le joueur peut faire deplacer des pieces
@@ -389,7 +390,13 @@ public class FenetrePrincipale extends JFrame {
 			if (o instanceof JButton) b = (JButton) o;
 			// on recupere le numero du cheval a deplacer via le numero en fin de nom du cheval ("cheval1", "cheval2"...)
 			int num = Integer.parseInt(b.getText().charAt(b.getText().length()-1) + "");
+			Piece p = getJeu().getJoueurPrecedent().get(num-1);
+			int x = p.getPos().getPosition().getAbscisse();
+			int y = p.getPos().getPosition().getOrdonnee();
 			getJeu().deplacerPiece(getJeu().getJoueurPrecedent().get(num-1), getScore());
+			int new_x = p.getPos().getPosition().getAbscisse();
+			int new_y = p.getPos().getPosition().getOrdonnee();
+			setResTour(b.getText() + " de " /*+ getJeu().getJoueurCourant().getNomJoueur() + " / "*/ + p.getProprietaire().getNomJoueur() + " s'est deplace de la case (" + x + "," + y + ") a la case (" +  new_x + "," + new_y + ")");
 			getJeu().terminerTour();
 		}
 	}
